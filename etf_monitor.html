@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五大被動ETF成分股每日監控</title>
+<style>
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --border: #e0e4ea;
+  --text: #1a2030;
+  --text-sub: #6b7280;
+  --up: #16a34a;
+  --down: #dc2626;
+  --fin: #7c3aed;
+  --new: #0369a1;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.header {
+  background: linear-gradient(135deg, #1a2744 0%, #2d3e6b 100%);
+  color: #fff;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: .5px; }
+.header h1 span { font-size: 13px; font-weight: 400; opacity: .75; display: block; margin-top: 2px; }
+.header-meta { text-align: right; font-size: 12px; opacity: .8; }
+.header-meta strong { display: block; font-size: 13px; color: #a5f3fc; }
+.tabs-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  box-shadow: var(--shadow);
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 14px 18px 11px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-sub);
+  white-space: nowrap;
+  transition: all .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.tab-btn:hover { color: var(--tab-color); background: #f8f9ff; }
+.tab-btn.active {
+  color: var(--tab-color);
+  border-bottom-color: var(--tab-color);
+  font-weight: 600;
+}
+.tab-code { font-size: 16px; font-weight: 700; }
+.tab-name { font-size: 11px; }
+.main { padding: 20px; max-width: 1400px; margin: 0 auto; }
+.tab-panel { animation: fadeIn .25s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:none } }
+.panel-header {
+  background: var(--surface);
+  padding: 14px 18px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+.panel-title-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.etf-badge {
+  color: #fff;
+  padding: 2px 9px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.company-name { color: var(--text-sub); font-size: 12px; }
+.panel-meta { font-size: 12px; color: var(--text-sub); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.date-label { color: var(--text-sub); }
+.aum-badge {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+.count-badge {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-weight: 600;
+  color: var(--text);
+}
+/* 金融股每日變化摘要列 */
+.fin-summary-bar {
+  background: #faf5ff;
+  border: 1px solid #d8b4fe;
+  border-bottom: none;
+  padding: 10px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+}
+.fin-summary-bar:empty { display: none; }
+.fin-chip {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 5px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid #e9d5ff;
+}
+.fin-chip .chip-label { color: #7c3aed; font-size: 11px; font-weight: 600; }
+.fin-chip .chip-val { font-weight: 600; font-size: 13px; color: var(--text); }
+.fin-chip .chip-sub { font-size: 11px; color: var(--text-sub); }
+.fin-chip-total { border-left: 3px solid #7c3aed; }
+.fin-chip-new   { border-left: 3px solid #0369a1; }
+.fin-chip-up    { border-left: 3px solid #16a34a; }
+.fin-chip-down  { border-left: 3px solid #dc2626; }
+/* 一般摘要列 */
+.summary-bar {
+  background: #fafbff;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: 10px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+}
+.summary-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.summary-chip .chip-label { color: var(--text-sub); font-size: 11px; }
+.summary-chip .chip-val { font-weight: 700; font-size: 14px; }
+.chip-up  { border-left: 3px solid var(--up); }
+.chip-down{ border-left: 3px solid var(--down); }
+.chip-new { border-left: 3px solid var(--new); }
+.table-controls {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: 10px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.search-input {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  width: 220px;
+  outline: none;
+}
+.search-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px #6366f120; }
+.filter-toggle {
+  font-size: 13px;
+  color: var(--text-sub);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: var(--shadow);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+thead {
+  background: #f8f9fc;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-sub);
+  border-bottom: 2px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+th:hover { background: #eef0f7; }
+.num-col { text-align: right; }
+td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #f0f2f6;
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f9faff; }
+td.num-col { text-align: right; font-variant-numeric: tabular-nums; }
+.code-cell { font-weight: 700; font-family: monospace; font-size: 14px; }
+.fin-badge {
+  background: #ede9fe;
+  color: var(--fin);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+  border: 1px solid #c4b5fd;
+}
+.new-badge {
+  background: #e0f2fe;
+  color: var(--new);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+.change-up   { color: var(--up);   font-weight: 700; }
+.change-down { color: var(--down); font-weight: 700; }
+.change-zero { color: var(--text-sub); }
+.change-null { color: #cbd5e1; font-size: 12px; }
+.arrow-up   { font-size: 11px; }
+.arrow-down { font-size: 11px; }
+.weight-bar {
+  display: inline-block;
+  background: #e2e8f0;
+  border-radius: 3px;
+  height: 6px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.weight-fill {
+  display: inline-block;
+  background: #6366f1;
+  border-radius: 3px;
+  height: 6px;
+}
+.memo-cell { font-size: 12px; color: var(--text-sub); line-height: 1.4; }
+.memo-fin  { color: var(--fin); font-weight: 600; }
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+.error-msg {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: #c53030;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.partial-msg {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  padding: 10px 18px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>📊 五大被動ETF成分股每日監控
+      <span>0050 ‧ 0056 ‧ 006208 ‧ 00878 ‧ 00919</span>
+    </h1>
+  </div>
+  <div class="header-meta">
+    <strong id="update-time">更新中…</strong>
+    資料更新時間
+  </div>
+</div>
+
+<div class="tabs-bar">
+  
+        <button class="tab-btn active"
+                onclick="showTab('0050')"
+                id="tab-0050"
+                style="--tab-color:#1E88E5">
+            <span class="tab-code">0050</span>
+            <span class="tab-name">元大台灣50</span>
+        </button>
+        <button class="tab-btn "
+                onclick="showTab('0056')"
+                id="tab-0056"
+                style="--tab-color:#00897B">
+            <span class="tab-code">0056</span>
+            <span class="tab-name">元大台灣高股息</span>
+        </button>
+        <button class="tab-btn "
+                onclick="showTab('006208')"
+                id="tab-006208"
+                style="--tab-color:#F57C00">
+            <span class="tab-code">006208</span>
+            <span class="tab-name">富邦台50</span>
+        </button>
+        <button class="tab-btn "
+                onclick="showTab('00878')"
+                id="tab-00878"
+                style="--tab-color:#7B1FA2">
+            <span class="tab-code">00878</span>
+            <span class="tab-name">國泰永續高股息</span>
+        </button>
+        <button class="tab-btn "
+                onclick="showTab('00919')"
+                id="tab-00919"
+                style="--tab-color:#C62828">
+            <span class="tab-code">00919</span>
+            <span class="tab-name">群益台灣精選高息</span>
+        </button>
+</div>
+
+<div class="main">
+  
+        <div class="tab-panel" id="panel-0050" style="display:block">
+            <div class="panel-header" style="border-left:4px solid #1E88E5">
+                <div class="panel-title-row">
+                    <span class="etf-badge" style="background:#1E88E5">0050</span>
+                    <strong>元大台灣50</strong>
+                    <small class="company-name">（元大投信）</small>
+                </div>
+                <div class="panel-meta">
+                    <span id="date-0050" class="date-label">－</span>
+                    <span id="aum-0050" class="aum-badge" style="display:none"></span>
+                    <span id="count-0050" class="count-badge">0 支</span>
+                </div>
+            </div>
+            <div class="fin-summary-bar" id="fin-summary-0050"></div>
+            <div class="summary-bar" id="summary-0050"></div>
+            <div class="table-controls">
+                <input type="text" placeholder="🔍 搜尋代碼或名稱…"
+                       oninput="filterTable('0050', this.value)"
+                       class="search-input">
+                <label class="filter-toggle">
+                    <input type="checkbox" id="fin-filter-0050"
+                           onchange="filterTable('0050')">
+                    僅顯示金融股
+                </label>
+                <div class="type-filter-row" id="type-btns-0050">
+                  <span style="font-size:12px;color:var(--text-sub)">類型：</span>
+                  <button class="active" onclick="setTypeFilter('0050','all',this)">全部</button>
+                  <button onclick="setTypeFilter('0050','stock',this)">個股</button>
+                  <button onclick="setTypeFilter('0050','nonstock',this)">非個股</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tbl-0050">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('0050',0)">代碼 ⇅</th>
+                            <th onclick="sortTable('0050',1)">名稱 ⇅</th>
+                            <th onclick="sortTable('0050',2)" class="num-col">今日張數 ⇅</th>
+                            <th onclick="sortTable('0050',3)" class="num-col">前日張數 ⇅</th>
+                            <th onclick="sortTable('0050',4)" class="num-col">增減(張) ⇅</th>
+                            <th onclick="sortTable('0050',5)" class="num-col">權重(%) ⇅</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-0050"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-0056" style="display:none">
+            <div class="panel-header" style="border-left:4px solid #00897B">
+                <div class="panel-title-row">
+                    <span class="etf-badge" style="background:#00897B">0056</span>
+                    <strong>元大台灣高股息</strong>
+                    <small class="company-name">（元大投信）</small>
+                </div>
+                <div class="panel-meta">
+                    <span id="date-0056" class="date-label">－</span>
+                    <span id="aum-0056" class="aum-badge" style="display:none"></span>
+                    <span id="count-0056" class="count-badge">0 支</span>
+                </div>
+            </div>
+            <div class="fin-summary-bar" id="fin-summary-0056"></div>
+            <div class="summary-bar" id="summary-0056"></div>
+            <div class="table-controls">
+                <input type="text" placeholder="🔍 搜尋代碼或名稱…"
+                       oninput="filterTable('0056', this.value)"
+                       class="search-input">
+                <label class="filter-toggle">
+                    <input type="checkbox" id="fin-filter-0056"
+                           onchange="filterTable('0056')">
+                    僅顯示金融股
+                </label>
+                <div class="type-filter-row" id="type-btns-0056">
+                  <span style="font-size:12px;color:var(--text-sub)">類型：</span>
+                  <button class="active" onclick="setTypeFilter('0056','all',this)">全部</button>
+                  <button onclick="setTypeFilter('0056','stock',this)">個股</button>
+                  <button onclick="setTypeFilter('0056','nonstock',this)">非個股</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tbl-0056">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('0056',0)">代碼 ⇅</th>
+                            <th onclick="sortTable('0056',1)">名稱 ⇅</th>
+                            <th onclick="sortTable('0056',2)" class="num-col">今日張數 ⇅</th>
+                            <th onclick="sortTable('0056',3)" class="num-col">前日張數 ⇅</th>
+                            <th onclick="sortTable('0056',4)" class="num-col">增減(張) ⇅</th>
+                            <th onclick="sortTable('0056',5)" class="num-col">權重(%) ⇅</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-0056"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-006208" style="display:none">
+            <div class="panel-header" style="border-left:4px solid #F57C00">
+                <div class="panel-title-row">
+                    <span class="etf-badge" style="background:#F57C00">006208</span>
+                    <strong>富邦台50</strong>
+                    <small class="company-name">（富邦投信）</small>
+                </div>
+                <div class="panel-meta">
+                    <span id="date-006208" class="date-label">－</span>
+                    <span id="aum-006208" class="aum-badge" style="display:none"></span>
+                    <span id="count-006208" class="count-badge">0 支</span>
+                </div>
+            </div>
+            <div class="fin-summary-bar" id="fin-summary-006208"></div>
+            <div class="summary-bar" id="summary-006208"></div>
+            <div class="table-controls">
+                <input type="text" placeholder="🔍 搜尋代碼或名稱…"
+                       oninput="filterTable('006208', this.value)"
+                       class="search-input">
+                <label class="filter-toggle">
+                    <input type="checkbox" id="fin-filter-006208"
+                           onchange="filterTable('006208')">
+                    僅顯示金融股
+                </label>
+                <div class="type-filter-row" id="type-btns-006208">
+                  <span style="font-size:12px;color:var(--text-sub)">類型：</span>
+                  <button class="active" onclick="setTypeFilter('006208','all',this)">全部</button>
+                  <button onclick="setTypeFilter('006208','stock',this)">個股</button>
+                  <button onclick="setTypeFilter('006208','nonstock',this)">非個股</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tbl-006208">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('006208',0)">代碼 ⇅</th>
+                            <th onclick="sortTable('006208',1)">名稱 ⇅</th>
+                            <th onclick="sortTable('006208',2)" class="num-col">今日張數 ⇅</th>
+                            <th onclick="sortTable('006208',3)" class="num-col">前日張數 ⇅</th>
+                            <th onclick="sortTable('006208',4)" class="num-col">增減(張) ⇅</th>
+                            <th onclick="sortTable('006208',5)" class="num-col">權重(%) ⇅</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-006208"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-00878" style="display:none">
+            <div class="panel-header" style="border-left:4px solid #7B1FA2">
+                <div class="panel-title-row">
+                    <span class="etf-badge" style="background:#7B1FA2">00878</span>
+                    <strong>國泰永續高股息</strong>
+                    <small class="company-name">（國泰投信）</small>
+                </div>
+                <div class="panel-meta">
+                    <span id="date-00878" class="date-label">－</span>
+                    <span id="aum-00878" class="aum-badge" style="display:none"></span>
+                    <span id="count-00878" class="count-badge">0 支</span>
+                </div>
+            </div>
+            <div class="fin-summary-bar" id="fin-summary-00878"></div>
+            <div class="summary-bar" id="summary-00878"></div>
+            <div class="table-controls">
+                <input type="text" placeholder="🔍 搜尋代碼或名稱…"
+                       oninput="filterTable('00878', this.value)"
+                       class="search-input">
+                <label class="filter-toggle">
+                    <input type="checkbox" id="fin-filter-00878"
+                           onchange="filterTable('00878')">
+                    僅顯示金融股
+                </label>
+                <div class="type-filter-row" id="type-btns-00878">
+                  <span style="font-size:12px;color:var(--text-sub)">類型：</span>
+                  <button class="active" onclick="setTypeFilter('00878','all',this)">全部</button>
+                  <button onclick="setTypeFilter('00878','stock',this)">個股</button>
+                  <button onclick="setTypeFilter('00878','nonstock',this)">非個股</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tbl-00878">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('00878',0)">代碼 ⇅</th>
+                            <th onclick="sortTable('00878',1)">名稱 ⇅</th>
+                            <th onclick="sortTable('00878',2)" class="num-col">今日張數 ⇅</th>
+                            <th onclick="sortTable('00878',3)" class="num-col">前日張數 ⇅</th>
+                            <th onclick="sortTable('00878',4)" class="num-col">增減(張) ⇅</th>
+                            <th onclick="sortTable('00878',5)" class="num-col">權重(%) ⇅</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-00878"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-panel" id="panel-00919" style="display:none">
+            <div class="panel-header" style="border-left:4px solid #C62828">
+                <div class="panel-title-row">
+                    <span class="etf-badge" style="background:#C62828">00919</span>
+                    <strong>群益台灣精選高息</strong>
+                    <small class="company-name">（群益投信）</small>
+                </div>
+                <div class="panel-meta">
+                    <span id="date-00919" class="date-label">－</span>
+                    <span id="aum-00919" class="aum-badge" style="display:none"></span>
+                    <span id="count-00919" class="count-badge">0 支</span>
+                </div>
+            </div>
+            <div class="fin-summary-bar" id="fin-summary-00919"></div>
+            <div class="summary-bar" id="summary-00919"></div>
+            <div class="table-controls">
+                <input type="text" placeholder="🔍 搜尋代碼或名稱…"
+                       oninput="filterTable('00919', this.value)"
+                       class="search-input">
+                <label class="filter-toggle">
+                    <input type="checkbox" id="fin-filter-00919"
+                           onchange="filterTable('00919')">
+                    僅顯示金融股
+                </label>
+                <div class="type-filter-row" id="type-btns-00919">
+                  <span style="font-size:12px;color:var(--text-sub)">類型：</span>
+                  <button class="active" onclick="setTypeFilter('00919','all',this)">全部</button>
+                  <button onclick="setTypeFilter('00919','stock',this)">個股</button>
+                  <button onclick="setTypeFilter('00919','nonstock',this)">非個股</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table id="tbl-00919">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('00919',0)">代碼 ⇅</th>
+                            <th onclick="sortTable('00919',1)">名稱 ⇅</th>
+                            <th onclick="sortTable('00919',2)" class="num-col">今日張數 ⇅</th>
+                            <th onclick="sortTable('00919',3)" class="num-col">前日張數 ⇅</th>
+                            <th onclick="sortTable('00919',4)" class="num-col">增減(張) ⇅</th>
+                            <th onclick="sortTable('00919',5)" class="num-col">權重(%) ⇅</th>
+                            <th>摘要</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-00919"></tbody>
+                </table>
+            </div>
+        </div>
+</div>
+
+<script>
+const ETF_META = {"0050": {"name": "元大台灣50", "company": "元大投信", "color": "#1E88E5", "bg": "#E3F2FD"}, "0056": {"name": "元大台灣高股息", "company": "元大投信", "color": "#00897B", "bg": "#E0F2F1"}, "006208": {"name": "富邦台50", "company": "富邦投信", "color": "#F57C00", "bg": "#FFF3E0"}, "00878": {"name": "國泰永續高股息", "company": "國泰投信", "color": "#7B1FA2", "bg": "#F3E5F5"}, "00919": {"name": "群益台灣精選高息", "company": "群益投信", "color": "#C62828", "bg": "#FFEBEE"}};
+const RAW_DATA = {"0050": {"date": "2026/05/22", "holdings": [{"code": "2330", "name": "台積電", "quantity": 482783146, "zhang": 482783, "weight": 59.37, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 482783, "prev_weight": 59.37, "prev_quantity": 482783146, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2454", "name": "聯發科", "quantity": 29071734, "zhang": 29071, "weight": 6.12, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 29071, "prev_weight": 6.12, "prev_quantity": 29071734, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2308", "name": "台達電", "quantity": 38379660, "zhang": 38379, "weight": 4.38, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 38379, "prev_weight": 4.38, "prev_quantity": 38379660, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2317", "name": "鴻海", "quantity": 241111804, "zhang": 241111, "weight": 3.29, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 241111, "prev_weight": 3.29, "prev_quantity": 241111804, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3711", "name": "日月光投控", "quantity": 65076625, "zhang": 65076, "weight": 1.99, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 65076, "prev_weight": 1.99, "prev_quantity": 65076625, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2383", "name": "台光電", "quantity": 5673674, "zhang": 5673, "weight": 1.55, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 5673, "prev_weight": 1.55, "prev_quantity": 5673674, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2303", "name": "聯電", "quantity": 229815420, "zhang": 229815, "weight": 1.43, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 229815, "prev_weight": 1.43, "prev_quantity": 229815420, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3037", "name": "欣興", "quantity": 26377812, "zhang": 26377, "weight": 1.4, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 26377, "prev_weight": 1.4, "prev_quantity": 26377812, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2345", "name": "智邦", "quantity": 9820966, "zhang": 9820, "weight": 1.32, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 9820, "prev_weight": 1.32, "prev_quantity": 9820966, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2891", "name": "中信金", "quantity": 350158442, "zhang": 350158, "weight": 1.1, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 350158, "prev_weight": 1.1, "prev_quantity": 350158442, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2327", "name": "國巨*", "quantity": 30610783, "zhang": 30610, "weight": 1.05, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 30610, "prev_weight": 1.05, "prev_quantity": 30610783, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2360", "name": "致茂", "quantity": 7307235, "zhang": 7307, "weight": 0.9, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 7307, "prev_weight": 0.9, "prev_quantity": 7307235, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2382", "name": "廣達", "quantity": 52230418, "zhang": 52230, "weight": 0.9, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 52230, "prev_weight": 0.9, "prev_quantity": 52230418, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3017", "name": "奇鋐", "quantity": 6419671, "zhang": 6419, "weight": 0.89, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 6419, "prev_weight": 0.89, "prev_quantity": 6419671, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2881", "name": "富邦金", "quantity": 164534301, "zhang": 164534, "weight": 0.85, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 164534, "prev_weight": 0.85, "prev_quantity": 164534301, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2882", "name": "國泰金", "quantity": 184621877, "zhang": 184621, "weight": 0.8, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 184621, "prev_weight": 0.8, "prev_quantity": 184621877, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2885", "name": "元大金", "quantity": 215056616, "zhang": 215056, "weight": 0.65, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 215056, "prev_weight": 0.65, "prev_quantity": 215056616, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6669", "name": "緯穎", "quantity": 2040558, "zhang": 2040, "weight": 0.61, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 2040, "prev_weight": 0.61, "prev_quantity": 2040558, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2887", "name": "台新新光金", "quantity": 453562770, "zhang": 453562, "weight": 0.59, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 453562, "prev_weight": 0.59, "prev_quantity": 453562770, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2412", "name": "中華電", "quantity": 75247800, "zhang": 75247, "weight": 0.56, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 75247, "prev_weight": 0.56, "prev_quantity": 75247800, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2884", "name": "玉山金", "quantity": 302633661, "zhang": 302633, "weight": 0.52, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 302633, "prev_weight": 0.52, "prev_quantity": 302633661, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2886", "name": "兆豐金", "quantity": 232889361, "zhang": 232889, "weight": 0.51, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 232889, "prev_weight": 0.51, "prev_quantity": 232889361, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2357", "name": "華碩", "quantity": 13466176, "zhang": 13466, "weight": 0.5, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13466, "prev_weight": 0.5, "prev_quantity": 13466176, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2368", "name": "金像電", "quantity": 6787494, "zhang": 6787, "weight": 0.49, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 6787, "prev_weight": 0.49, "prev_quantity": 6787494, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3231", "name": "緯創", "quantity": 60319789, "zhang": 60319, "weight": 0.48, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 60319, "prev_weight": 0.48, "prev_quantity": 60319789, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "7769", "name": "鴻勁", "quantity": 1125080, "zhang": 1125, "weight": 0.47, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1125, "prev_weight": 0.47, "prev_quantity": 1125080, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1303", "name": "南亞", "quantity": 97154923, "zhang": 97154, "weight": 0.46, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 97154, "prev_weight": 0.46, "prev_quantity": 97154923, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2301", "name": "光寶科", "quantity": 38300588, "zhang": 38300, "weight": 0.43, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 38300, "prev_weight": 0.43, "prev_quantity": 38300588, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2344", "name": "華邦電", "quantity": 61527602, "zhang": 61527, "weight": 0.42, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 61527, "prev_weight": 0.42, "prev_quantity": 61527602, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3661", "name": "世芯-KY", "quantity": 1566367, "zhang": 1566, "weight": 0.42, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1566, "prev_weight": 0.42, "prev_quantity": 1566367, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2890", "name": "永豐金", "quantity": 250071157, "zhang": 250071, "weight": 0.4, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 250071, "prev_weight": 0.4, "prev_quantity": 250071157, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1216", "name": "統一", "quantity": 97092586, "zhang": 97092, "weight": 0.38, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 97092, "prev_weight": 0.38, "prev_quantity": 97092586, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2408", "name": "南亞科", "quantity": 22145350, "zhang": 22145, "weight": 0.37, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 22145, "prev_weight": 0.37, "prev_quantity": 22145350, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2883", "name": "凱基金", "quantity": 311466123, "zhang": 311466, "weight": 0.37, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 311466, "prev_weight": 0.37, "prev_quantity": 311466123, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3008", "name": "大立光", "quantity": 1892780, "zhang": 1892, "weight": 0.37, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1892, "prev_weight": 0.37, "prev_quantity": 1892780, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2449", "name": "京元電子", "quantity": 21445726, "zhang": 21445, "weight": 0.35, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 21445, "prev_weight": 0.35, "prev_quantity": 21445726, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3653", "name": "健策", "quantity": 1661839, "zhang": 1661, "weight": 0.33, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1661, "prev_weight": 0.33, "prev_quantity": 1661839, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2880", "name": "華南金", "quantity": 183440837, "zhang": 183440, "weight": 0.32, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 183440, "prev_weight": 0.32, "prev_quantity": 183440837, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2892", "name": "第一金", "quantity": 213963655, "zhang": 213963, "weight": 0.32, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 213963, "prev_weight": 0.32, "prev_quantity": 213963655, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2059", "name": "川湖", "quantity": 1119113, "zhang": 1119, "weight": 0.31, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1119, "prev_weight": 0.31, "prev_quantity": 1119113, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2603", "name": "長榮", "quantity": 21425034, "zhang": 21425, "weight": 0.26, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 21425, "prev_weight": 0.26, "prev_quantity": 21425034, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5880", "name": "合庫金", "quantity": 206338422, "zhang": 206338, "weight": 0.26, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 206338, "prev_weight": 0.26, "prev_quantity": 206338422, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2395", "name": "研華", "quantity": 9053840, "zhang": 9053, "weight": 0.23, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 9053, "prev_weight": 0.23, "prev_quantity": 9053840, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2002", "name": "中鋼", "quantity": 220399132, "zhang": 220399, "weight": 0.22, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 220399, "prev_weight": 0.22, "prev_quantity": 220399132, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1301", "name": "台塑", "quantity": 82727651, "zhang": 82727, "weight": 0.2, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 82727, "prev_weight": 0.2, "prev_quantity": 82727651, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4904", "name": "遠傳", "quantity": 34975982, "zhang": 34975, "weight": 0.18, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 34975, "prev_weight": 0.18, "prev_quantity": 34975982, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3045", "name": "台灣大", "quantity": 27871276, "zhang": 27871, "weight": 0.17, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 27871, "prev_weight": 0.17, "prev_quantity": 27871276, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2207", "name": "和泰車", "quantity": 5518092, "zhang": 5518, "weight": 0.14, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 5518, "prev_weight": 0.14, "prev_quantity": 5518092, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6919", "name": "康霈*", "quantity": 18997617, "zhang": 18997, "weight": 0.11, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 18997, "prev_weight": 0.11, "prev_quantity": 18997617, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6505", "name": "台塑化", "quantity": 23477296, "zhang": 23477, "weight": 0.07, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 23477, "prev_weight": 0.07, "prev_quantity": 23477296, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "TX", "name": "臺股期貨", "quantity": 268, "zhang": 0, "weight": 0.12, "is_financial": false, "item_type": "futures", "display_unit": "口", "contract_month": "202606", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "NYF", "name": "台灣50ETF股票期貨", "quantity": 1738, "zhang": 0, "weight": 0.09, "is_financial": false, "item_type": "futures", "display_unit": "口", "contract_month": "202606", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}], "aum": "17,973.69 億", "prev_date": "2026/05/21"}, "0056": {"date": "2026/05/22", "holdings": [{"code": "2454", "name": "聯發科", "quantity": 15492887, "zhang": 15492, "weight": 9.38, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 15492, "prev_weight": 9.38, "prev_quantity": 15492887, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2303", "name": "聯電", "quantity": 414523694, "zhang": 414523, "weight": 7.41, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 414523, "prev_weight": 7.41, "prev_quantity": 414523694, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3711", "name": "日月光投控", "quantity": 63578291, "zhang": 63578, "weight": 5.59, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 63578, "prev_weight": 5.59, "prev_quantity": 63578291, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2891", "name": "中信金", "quantity": 451700543, "zhang": 451700, "weight": 4.08, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 451700, "prev_weight": 4.08, "prev_quantity": 451700543, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2382", "name": "廣達", "quantity": 75444794, "zhang": 75444, "weight": 3.74, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 75444, "prev_weight": 3.74, "prev_quantity": 75444794, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2357", "name": "華碩", "quantity": 34622470, "zhang": 34622, "weight": 3.7, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 34622, "prev_weight": 3.7, "prev_quantity": 34622470, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2885", "name": "元大金", "quantity": 376298033, "zhang": 376298, "weight": 3.25, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 376298, "prev_weight": 3.25, "prev_quantity": 376298033, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2603", "name": "長榮", "quantity": 91700988, "zhang": 91700, "weight": 3.15, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 91700, "prev_weight": 3.15, "prev_quantity": 91700988, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2301", "name": "光寶科", "quantity": 94488919, "zhang": 94488, "weight": 3.07, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 94488, "prev_weight": 3.07, "prev_quantity": 94488919, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3231", "name": "緯創", "quantity": 120158584, "zhang": 120158, "weight": 2.72, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 120158, "prev_weight": 2.72, "prev_quantity": 120158584, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2880", "name": "華南金", "quantity": 516029221, "zhang": 516029, "weight": 2.59, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 516029, "prev_weight": 2.59, "prev_quantity": 516029221, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3036", "name": "文曄", "quantity": 57232727, "zhang": 57232, "weight": 2.59, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 57232, "prev_weight": 2.59, "prev_quantity": 57232727, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2890", "name": "永豐金", "quantity": 553381147, "zhang": 553381, "weight": 2.53, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 553381, "prev_weight": 2.53, "prev_quantity": 553381147, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2317", "name": "鴻海", "quantity": 63663134, "zhang": 63663, "weight": 2.5, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 63663, "prev_weight": 2.5, "prev_quantity": 63663134, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2449", "name": "京元電子", "quantity": 53483200, "zhang": 53483, "weight": 2.48, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 53483, "prev_weight": 2.48, "prev_quantity": 53483200, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3045", "name": "台灣大", "quantity": 138987130, "zhang": 138987, "weight": 2.44, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 138987, "prev_weight": 2.44, "prev_quantity": 138987130, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2886", "name": "兆豐金", "quantity": 370240135, "zhang": 370240, "weight": 2.32, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 370240, "prev_weight": 2.32, "prev_quantity": 370240135, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2379", "name": "瑞昱", "quantity": 25065590, "zhang": 25065, "weight": 2.27, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 25065, "prev_weight": 2.27, "prev_quantity": 25065590, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1216", "name": "統一", "quantity": 193335949, "zhang": 193335, "weight": 2.17, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 193335, "prev_weight": 2.17, "prev_quantity": 193335949, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3034", "name": "聯詠", "quantity": 28213324, "zhang": 28213, "weight": 2.15, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 28213, "prev_weight": 2.15, "prev_quantity": 28213324, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2883", "name": "凱基金", "quantity": 580807859, "zhang": 580807, "weight": 1.98, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 580807, "prev_weight": 1.98, "prev_quantity": 580807859, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3044", "name": "健鼎", "quantity": 24526467, "zhang": 24526, "weight": 1.89, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 24526, "prev_weight": 1.89, "prev_quantity": 24526467, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2884", "name": "玉山金", "quantity": 357304094, "zhang": 357304, "weight": 1.75, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 357304, "prev_weight": 1.75, "prev_quantity": 357304094, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2887", "name": "台新新光金", "quantity": 431175634, "zhang": 431175, "weight": 1.61, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 431175, "prev_weight": 1.61, "prev_quantity": 431175634, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2376", "name": "技嘉", "quantity": 31251610, "zhang": 31251, "weight": 1.58, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 31251, "prev_weight": 1.58, "prev_quantity": 31251610, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6239", "name": "力成", "quantity": 35635132, "zhang": 35635, "weight": 1.58, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 35635, "prev_weight": 1.58, "prev_quantity": 35635132, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4938", "name": "和碩", "quantity": 119121638, "zhang": 119121, "weight": 1.51, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 119121, "prev_weight": 1.51, "prev_quantity": 119121638, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2356", "name": "英業達", "quantity": 161131955, "zhang": 161131, "weight": 1.5, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 161131, "prev_weight": 1.5, "prev_quantity": 161131955, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2618", "name": "長榮航", "quantity": 250645461, "zhang": 250645, "weight": 1.4, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 250645, "prev_weight": 1.4, "prev_quantity": 250645461, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3702", "name": "大聯大", "quantity": 75019656, "zhang": 75019, "weight": 1.39, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 75019, "prev_weight": 1.39, "prev_quantity": 75019656, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5876", "name": "上海商銀", "quantity": 211751060, "zhang": 211751, "weight": 1.33, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 211751, "prev_weight": 1.33, "prev_quantity": 211751060, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2347", "name": "聯強", "quantity": 80250057, "zhang": 80250, "weight": 1.06, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 80250, "prev_weight": 1.06, "prev_quantity": 80250057, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6285", "name": "啟碁", "quantity": 22671885, "zhang": 22671, "weight": 1.05, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 22671, "prev_weight": 1.05, "prev_quantity": 22671885, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2324", "name": "仁寶", "quantity": 201971210, "zhang": 201971, "weight": 1.0, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 201971, "prev_weight": 1.0, "prev_quantity": 201971210, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1102", "name": "亞泥", "quantity": 148061618, "zhang": 148061, "weight": 0.8, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 148061, "prev_weight": 0.8, "prev_quantity": 148061618, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2105", "name": "正新", "quantity": 152175756, "zhang": 152175, "weight": 0.76, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 152175, "prev_weight": 0.76, "prev_quantity": 152175756, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2474", "name": "可成", "quantity": 25938136, "zhang": 25938, "weight": 0.76, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 25938, "prev_weight": 0.76, "prev_quantity": 25938136, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2377", "name": "微星", "quantity": 38017806, "zhang": 38017, "weight": 0.74, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 38017, "prev_weight": 0.74, "prev_quantity": 38017806, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2027", "name": "大成鋼", "quantity": 104932697, "zhang": 104932, "weight": 0.69, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 104932, "prev_weight": 0.69, "prev_quantity": 104932697, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2385", "name": "群光", "quantity": 33433493, "zhang": 33433, "weight": 0.69, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 33433, "prev_weight": 0.69, "prev_quantity": 33433493, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2353", "name": "宏碁", "quantity": 130958843, "zhang": 130958, "weight": 0.61, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 130958, "prev_weight": 0.61, "prev_quantity": 130958843, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3023", "name": "信邦", "quantity": 11118007, "zhang": 11118, "weight": 0.55, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 11118, "prev_weight": 0.55, "prev_quantity": 11118007, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3005", "name": "神基", "quantity": 28978792, "zhang": 28978, "weight": 0.47, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 28978, "prev_weight": 0.47, "prev_quantity": 28978792, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "9904", "name": "寶成", "quantity": 110018708, "zhang": 110018, "weight": 0.45, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 110018, "prev_weight": 0.45, "prev_quantity": 110018708, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1477", "name": "聚陽", "quantity": 11352462, "zhang": 11352, "weight": 0.39, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 11352, "prev_weight": 0.39, "prev_quantity": 11352462, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2645", "name": "長榮航太", "quantity": 13811586, "zhang": 13811, "weight": 0.35, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13811, "prev_weight": 0.35, "prev_quantity": 13811586, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1319", "name": "東陽", "quantity": 26588656, "zhang": 26588, "weight": 0.34, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 26588, "prev_weight": 0.34, "prev_quantity": 26588656, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2006", "name": "東和鋼鐵", "quantity": 32966570, "zhang": 32966, "weight": 0.34, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 32966, "prev_weight": 0.34, "prev_quantity": 32966570, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6176", "name": "瑞儀", "quantity": 19815461, "zhang": 19815, "weight": 0.33, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 19815, "prev_weight": 0.33, "prev_quantity": 19815461, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "TX", "name": "臺股期貨", "quantity": 725, "zhang": 0, "weight": 0.97, "is_financial": false, "item_type": "futures", "display_unit": "口", "contract_month": "202606", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}], "aum": "6,243.95 億", "prev_date": "2026/05/21"}, "006208": {"date": "2026/05/22", "holdings": [{"code": "WTXM6F", "name": "2026/06台股指數期貨", "quantity": 85, "zhang": 0, "weight": 0.1738, "is_financial": false, "item_type": "futures", "display_unit": "口", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "2330", "name": "台積電", "quantity": 109345064, "zhang": 109345, "weight": 59.3958, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 109345, "prev_weight": 59.3958, "prev_quantity": 109345064, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2454", "name": "聯發科", "quantity": 6587042, "zhang": 6587, "weight": 6.1247, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 6587, "prev_weight": 6.1247, "prev_quantity": 6587042, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2308", "name": "台達電", "quantity": 8654581, "zhang": 8654, "weight": 4.3675, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 8654, "prev_weight": 4.3675, "prev_quantity": 8654581, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2317", "name": "鴻海", "quantity": 54551679, "zhang": 54551, "weight": 3.2851, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 54551, "prev_weight": 3.2851, "prev_quantity": 54551679, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3711", "name": "日月光投控", "quantity": 14673577, "zhang": 14673, "weight": 1.9829, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 14673, "prev_weight": 1.9829, "prev_quantity": 14673577, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2383", "name": "台光電", "quantity": 1282000, "zhang": 1282, "weight": 1.5456, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1282, "prev_weight": 1.5456, "prev_quantity": 1282000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2303", "name": "聯電", "quantity": 52130891, "zhang": 52130, "weight": 1.4315, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 52130, "prev_weight": 1.4315, "prev_quantity": 52130891, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3037", "name": "欣興", "quantity": 5968000, "zhang": 5968, "weight": 1.3944, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 5968, "prev_weight": 1.3944, "prev_quantity": 5968000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2345", "name": "智邦", "quantity": 2218000, "zhang": 2218, "weight": 1.3196, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 2218, "prev_weight": 1.3196, "prev_quantity": 2218000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2891", "name": "中信金", "quantity": 78975506, "zhang": 78975, "weight": 1.0957, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 78975, "prev_weight": 1.0957, "prev_quantity": 78975506, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2327", "name": "國巨*", "quantity": 6944728, "zhang": 6944, "weight": 1.0522, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 6944, "prev_weight": 1.0522, "prev_quantity": 6944728, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2360", "name": "致茂", "quantity": 1650000, "zhang": 1650, "weight": 0.9022, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1650, "prev_weight": 0.9022, "prev_quantity": 1650000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2382", "name": "廣達", "quantity": 11803301, "zhang": 11803, "weight": 0.8984, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 11803, "prev_weight": 0.8984, "prev_quantity": 11803301, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3017", "name": "奇鋐", "quantity": 1451000, "zhang": 1451, "weight": 0.8895, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1451, "prev_weight": 0.8895, "prev_quantity": 1451000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2881", "name": "富邦金", "quantity": 37323543, "zhang": 37323, "weight": 0.855, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 37323, "prev_weight": 0.855, "prev_quantity": 37323543, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2882", "name": "國泰金", "quantity": 41879200, "zhang": 41879, "weight": 0.804, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 41879, "prev_weight": 0.804, "prev_quantity": 41879200, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2885", "name": "元大金", "quantity": 48737456, "zhang": 48737, "weight": 0.6468, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 48737, "prev_weight": 0.6468, "prev_quantity": 48737456, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6669", "name": "緯穎", "quantity": 463000, "zhang": 463, "weight": 0.6162, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 463, "prev_weight": 0.6162, "prev_quantity": 463000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2887", "name": "台新新光金", "quantity": 102839500, "zhang": 102839, "weight": 0.5895, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 102839, "prev_weight": 0.5895, "prev_quantity": 102839500, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2412", "name": "中華電", "quantity": 17069072, "zhang": 17069, "weight": 0.5633, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 17069, "prev_weight": 0.5633, "prev_quantity": 17069072, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2884", "name": "玉山金", "quantity": 68648867, "zhang": 68648, "weight": 0.5175, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 68648, "prev_weight": 0.5175, "prev_quantity": 68648867, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2886", "name": "兆豐金", "quantity": 52828130, "zhang": 52828, "weight": 0.5077, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 52828, "prev_weight": 0.5077, "prev_quantity": 52828130, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2357", "name": "華碩", "quantity": 3054657, "zhang": 3054, "weight": 0.5018, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 3054, "prev_weight": 0.5018, "prev_quantity": 3054657, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2368", "name": "金像電", "quantity": 1540000, "zhang": 1540, "weight": 0.4933, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1540, "prev_weight": 0.4933, "prev_quantity": 1540000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "7769", "name": "鴻勁", "quantity": 256000, "zhang": 256, "weight": 0.4766, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 256, "prev_weight": 0.4766, "prev_quantity": 256000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3231", "name": "緯創", "quantity": 13683000, "zhang": 13683, "weight": 0.4762, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13683, "prev_weight": 0.4762, "prev_quantity": 13683000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1303", "name": "南亞", "quantity": 22038502, "zhang": 22038, "weight": 0.4602, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 22038, "prev_weight": 0.4602, "prev_quantity": 22038502, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2301", "name": "光寶科", "quantity": 8688000, "zhang": 8688, "weight": 0.4332, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 8688, "prev_weight": 0.4332, "prev_quantity": 8688000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2344", "name": "華邦電", "quantity": 13957000, "zhang": 13957, "weight": 0.4202, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13957, "prev_weight": 0.4202, "prev_quantity": 13957000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3661", "name": "世芯-KY", "quantity": 356000, "zhang": 356, "weight": 0.4197, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 356, "prev_weight": 0.4197, "prev_quantity": 356000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2890", "name": "永豐金", "quantity": 56703373, "zhang": 56703, "weight": 0.3974, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 56703, "prev_weight": 0.3974, "prev_quantity": 56703373, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1216", "name": "統一", "quantity": 22024765, "zhang": 22024, "weight": 0.3793, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 22024, "prev_weight": 0.3793, "prev_quantity": 22024765, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2408", "name": "南亞科", "quantity": 5024000, "zhang": 5024, "weight": 0.3757, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 5024, "prev_weight": 0.3757, "prev_quantity": 5024000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2883", "name": "凱基金", "quantity": 70539545, "zhang": 70539, "weight": 0.3687, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 70539, "prev_weight": 0.3687, "prev_quantity": 70539545, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3008", "name": "大立光", "quantity": 429468, "zhang": 429, "weight": 0.3662, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 429, "prev_weight": 0.3662, "prev_quantity": 429468, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2449", "name": "京元電子", "quantity": 4865000, "zhang": 4865, "weight": 0.3468, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 4865, "prev_weight": 0.3468, "prev_quantity": 4865000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3653", "name": "健策", "quantity": 377000, "zhang": 377, "weight": 0.3323, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 377, "prev_weight": 0.3323, "prev_quantity": 377000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2892", "name": "第一金", "quantity": 48535640, "zhang": 48535, "weight": 0.3221, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 48535, "prev_weight": 0.3221, "prev_quantity": 48535640, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2880", "name": "華南金", "quantity": 41612046, "zhang": 41612, "weight": 0.3202, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 41612, "prev_weight": 0.3202, "prev_quantity": 41612046, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2059", "name": "川湖", "quantity": 254000, "zhang": 254, "weight": 0.3114, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 254, "prev_weight": 0.3114, "prev_quantity": 254000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2603", "name": "長榮", "quantity": 4861000, "zhang": 4861, "weight": 0.2564, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 4861, "prev_weight": 0.2564, "prev_quantity": 4861000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5880", "name": "合庫金", "quantity": 46806109, "zhang": 46806, "weight": 0.2559, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 46806, "prev_weight": 0.2559, "prev_quantity": 46806109, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2395", "name": "研華", "quantity": 2054538, "zhang": 2054, "weight": 0.2321, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 2054, "prev_weight": 0.2321, "prev_quantity": 2054538, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2002", "name": "中鋼", "quantity": 49995307, "zhang": 49995, "weight": 0.2185, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 49995, "prev_weight": 0.2185, "prev_quantity": 49995307, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1301", "name": "台塑", "quantity": 18766117, "zhang": 18766, "weight": 0.2045, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 18766, "prev_weight": 0.2045, "prev_quantity": 18766117, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4904", "name": "遠傳", "quantity": 7934506, "zhang": 7934, "weight": 0.1825, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 7934, "prev_weight": 0.1825, "prev_quantity": 7934506, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3045", "name": "台灣大", "quantity": 6322368, "zhang": 6322, "weight": 0.1705, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 6322, "prev_weight": 0.1705, "prev_quantity": 6322368, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2207", "name": "和泰車", "quantity": 1252044, "zhang": 1252, "weight": 0.1393, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1252, "prev_weight": 0.1393, "prev_quantity": 1252044, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6919", "name": "康霈*", "quantity": 4430000, "zhang": 4430, "weight": 0.1109, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 4430, "prev_weight": 0.1109, "prev_quantity": 4430000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6505", "name": "台塑化", "quantity": 5326203, "zhang": 5326, "weight": 0.0654, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 5326, "prev_weight": 0.0654, "prev_quantity": 5326203, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "A00102", "name": "100央債甲2", "quantity": 15776237, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "A01102", "name": "101央債甲2", "quantity": 736224, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "A13102", "name": "113央債甲2", "quantity": 32000000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "A15202", "name": "115央債乙2", "quantity": 42490665, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B401DQ", "name": "P10南亞1A", "quantity": 3168000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B618C1", "name": "P09台積5B", "quantity": 3705900, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B618CW", "name": "P11台積1B", "quantity": 4157000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B618E9", "name": "P15台積1A", "quantity": 16105000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B718AQ", "name": "P13中油3A", "quantity": 16484000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B718B3", "name": "P13中油7A", "quantity": 27284100, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B903X5", "name": "P08台電3C", "quantity": 2320000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B903YM", "name": "P11台電6B", "quantity": 503000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B98913", "name": "P12國泰金1A", "quantity": 48421000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "B99702", "name": "P12台壽1A", "quantity": 44852000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "HB1203", "name": "112高市債3", "quantity": 23000000, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "bond", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}], "aum": "4,070.17 億", "prev_date": "2026/05/21"}, "00878": {"date": "2026/05/22", "holdings": [{"code": "C_NTD", "name": "CASH", "quantity": 15154007185, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "cash", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "M_NTD", "name": "MARGIN", "quantity": 9830360887, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "margin", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "2891", "name": "中信金", "quantity": 817122000, "zhang": 817122, "weight": 8.76, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 817122, "prev_weight": 8.76, "prev_quantity": 817122000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2882", "name": "國泰金", "quantity": 557990486, "zhang": 557990, "weight": 8.28, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 557990, "prev_weight": 8.28, "prev_quantity": 557990486, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2303", "name": "聯電", "quantity": 461653000, "zhang": 461653, "weight": 9.8, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 461653, "prev_weight": 9.8, "prev_quantity": 461653000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2881", "name": "富邦金", "quantity": 357622945, "zhang": 357622, "weight": 6.33, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 357622, "prev_weight": 6.33, "prev_quantity": 357622945, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2885", "name": "元大金", "quantity": 303824516, "zhang": 303824, "weight": 3.12, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 303824, "prev_weight": 3.12, "prev_quantity": 303824516, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2886", "name": "兆豐金", "quantity": 269763964, "zhang": 269763, "weight": 2.0, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 269763, "prev_weight": 2.0, "prev_quantity": 269763964, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5876", "name": "上海商銀", "quantity": 208939590, "zhang": 208939, "weight": 1.56, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 208939, "prev_weight": 1.56, "prev_quantity": 208939590, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1402", "name": "遠東新", "quantity": 198070000, "zhang": 198070, "weight": 1.0, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 198070, "prev_weight": 1.0, "prev_quantity": 198070000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1216", "name": "統一", "quantity": 146658000, "zhang": 146658, "weight": 1.95, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 146658, "prev_weight": 1.95, "prev_quantity": 146658000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2356", "name": "英業達", "quantity": 145694000, "zhang": 145694, "weight": 1.61, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 145694, "prev_weight": 1.61, "prev_quantity": 145694000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4904", "name": "遠傳", "quantity": 117950000, "zhang": 117950, "weight": 2.1, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 117950, "prev_weight": 2.1, "prev_quantity": 117950000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3045", "name": "台灣大", "quantity": 104543000, "zhang": 104543, "weight": 2.18, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 104543, "prev_weight": 2.18, "prev_quantity": 104543000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2324", "name": "仁寶", "quantity": 99388000, "zhang": 99388, "weight": 0.58, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 99388, "prev_weight": 0.58, "prev_quantity": 99388000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2412", "name": "中華電", "quantity": 77214000, "zhang": 77214, "weight": 1.97, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 77214, "prev_weight": 1.97, "prev_quantity": 77214000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5347", "name": "世界先進", "quantity": 76192442, "zhang": 76192, "weight": 2.3, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 76192, "prev_weight": 2.3, "prev_quantity": 76192442, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5871", "name": "中租-KY", "quantity": 74359080, "zhang": 74359, "weight": 1.54, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 74359, "prev_weight": 1.54, "prev_quantity": 74359080, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3231", "name": "緯創", "quantity": 71185000, "zhang": 71185, "weight": 1.91, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 71185, "prev_weight": 1.91, "prev_quantity": 71185000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2301", "name": "光寶科", "quantity": 69293000, "zhang": 69293, "weight": 2.67, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 69293, "prev_weight": 2.67, "prev_quantity": 69293000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2382", "name": "廣達", "quantity": 67557000, "zhang": 67557, "weight": 3.97, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 67557, "prev_weight": 3.97, "prev_quantity": 67557000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2887", "name": "台新新光金", "quantity": 64331000, "zhang": 64331, "weight": 0.29, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 64331, "prev_weight": 0.29, "prev_quantity": 64331000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3711", "name": "日月光投控", "quantity": 54588000, "zhang": 54588, "weight": 5.7, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 54588, "prev_weight": 5.7, "prev_quantity": 54588000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4958", "name": "臻鼎-KY", "quantity": 39009000, "zhang": 39009, "weight": 3.75, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 39009, "prev_weight": 3.75, "prev_quantity": 39009000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2449", "name": "京元電子", "quantity": 33438000, "zhang": 33438, "weight": 1.84, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 33438, "prev_weight": 1.84, "prev_quantity": 33438000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2357", "name": "華碩", "quantity": 31615000, "zhang": 31615, "weight": 4.01, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 31615, "prev_weight": 4.01, "prev_quantity": 31615000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2376", "name": "技嘉", "quantity": 26746000, "zhang": 26746, "weight": 1.61, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 26746, "prev_weight": 1.61, "prev_quantity": 26746000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3034", "name": "聯詠", "quantity": 25304000, "zhang": 25304, "weight": 2.29, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 25304, "prev_weight": 2.29, "prev_quantity": 25304000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2379", "name": "瑞昱", "quantity": 20977000, "zhang": 20977, "weight": 2.26, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 20977, "prev_weight": 2.26, "prev_quantity": 20977000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2474", "name": "可成", "quantity": 19103000, "zhang": 19103, "weight": 0.67, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 19103, "prev_weight": 0.67, "prev_quantity": 19103000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2618", "name": "長榮航", "quantity": 18354000, "zhang": 18354, "weight": 0.12, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 18354, "prev_weight": 0.12, "prev_quantity": 18354000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2880", "name": "華南金", "quantity": 14813000, "zhang": 14813, "weight": 0.09, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 14813, "prev_weight": 0.09, "prev_quantity": 14813000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2454", "name": "聯發科", "quantity": 12958000, "zhang": 12958, "weight": 9.31, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 12958, "prev_weight": 9.31, "prev_quantity": 12958000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2603", "name": "長榮", "quantity": 12380000, "zhang": 12380, "weight": 0.5, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 12380, "prev_weight": 0.5, "prev_quantity": 12380000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3293", "name": "鈊 象", "quantity": 12072000, "zhang": 12072, "weight": 1.68, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 12072, "prev_weight": 1.68, "prev_quantity": 12072000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2912", "name": "統一超", "quantity": 1955000, "zhang": 1955, "weight": 0.08, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 1955, "prev_weight": 0.08, "prev_quantity": 1955000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "202606TX", "name": "台股期貨", "quantity": 1430, "zhang": 0, "weight": 2.26, "is_financial": false, "item_type": "futures", "display_unit": "口", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}, {"code": "PFUR_NTD", "name": "PAYABLES FOR UNITS REDEEMED", "quantity": -803564951, "zhang": 0, "weight": 0.0, "is_financial": false, "item_type": "payable", "display_unit": "元", "contract_month": "", "prev_zhang": null, "prev_weight": null, "prev_quantity": null, "change_zhang": null, "change_weight": null, "change_quantity": null, "is_new": true}], "aum": "5,267.91 億", "prev_date": "2026/05/21"}, "00919": {"date": "2026/05/22", "holdings": [{"code": "2303", "name": "聯電", "quantity": 602462000, "zhang": 602462, "weight": 14.58, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 602462, "prev_weight": 14.58, "prev_quantity": 602462000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2891", "name": "中信金", "quantity": 949277000, "zhang": 949277, "weight": 11.61, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 949277, "prev_weight": 11.61, "prev_quantity": 949277000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2882", "name": "國泰金", "quantity": 659470000, "zhang": 659470, "weight": 11.16, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 659470, "prev_weight": 11.16, "prev_quantity": 659470000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2881", "name": "富邦金", "quantity": 409170000, "zhang": 409170, "weight": 8.26, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 409170, "prev_weight": 8.26, "prev_quantity": 409170000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2357", "name": "華碩", "quantity": 38810000, "zhang": 38810, "weight": 5.62, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 38810, "prev_weight": 5.62, "prev_quantity": 38810000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2603", "name": "長榮", "quantity": 117153000, "zhang": 117153, "weight": 5.45, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 117153, "prev_weight": 5.45, "prev_quantity": 117153000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2887", "name": "台新新光金", "quantity": 1026630000, "zhang": 1026630, "weight": 5.19, "is_financial": true, "item_type": "stock", "display_unit": "張", "prev_zhang": 1026630, "prev_weight": 5.19, "prev_quantity": 1026630000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3034", "name": "聯詠", "quantity": 41195000, "zhang": 41195, "weight": 4.25, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 41195, "prev_weight": 4.25, "prev_quantity": 41195000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3036", "name": "文曄", "quantity": 50460000, "zhang": 50460, "weight": 3.1, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 50460, "prev_weight": 3.1, "prev_quantity": 50460000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2609", "name": "陽明", "quantity": 237710000, "zhang": 237710, "weight": 2.67, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 237710, "prev_weight": 2.67, "prev_quantity": 237710000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2404", "name": "漢唐", "quantity": 9836000, "zhang": 9836, "weight": 2.41, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 9836, "prev_weight": 2.41, "prev_quantity": 9836000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5347", "name": "世界", "quantity": 66872441, "zhang": 66872, "weight": 2.3, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 66872, "prev_weight": 2.3, "prev_quantity": 66872441, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6239", "name": "力成", "quantity": 37904000, "zhang": 37904, "weight": 2.28, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 37904, "prev_weight": 2.28, "prev_quantity": 37904000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2618", "name": "長榮航", "quantity": 297204000, "zhang": 297204, "weight": 2.24, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 297204, "prev_weight": 2.24, "prev_quantity": 297204000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2451", "name": "創見", "quantity": 21319000, "zhang": 21319, "weight": 1.43, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 21319, "prev_weight": 1.43, "prev_quantity": 21319000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2474", "name": "可成", "quantity": 30870000, "zhang": 30870, "weight": 1.23, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 30870, "prev_weight": 1.23, "prev_quantity": 30870000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3702", "name": "大聯大", "quantity": 44160000, "zhang": 44160, "weight": 1.11, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 44160, "prev_weight": 1.11, "prev_quantity": 44160000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6121", "name": "新普", "quantity": 13474000, "zhang": 13474, "weight": 1.09, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13474, "prev_weight": 1.09, "prev_quantity": 13474000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "5522", "name": "遠雄", "quantity": 72239000, "zhang": 72239, "weight": 1.07, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 72239, "prev_weight": 1.07, "prev_quantity": 72239000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2385", "name": "群光", "quantity": 36160000, "zhang": 36160, "weight": 1.01, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 36160, "prev_weight": 1.01, "prev_quantity": 36160000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6176", "name": "瑞儀", "quantity": 43111000, "zhang": 43111, "weight": 0.98, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 43111, "prev_weight": 0.98, "prev_quantity": 43111000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2504", "name": "國產", "quantity": 117699000, "zhang": 117699, "weight": 0.87, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 117699, "prev_weight": 0.87, "prev_quantity": 117699000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2637", "name": "慧洋-KY", "quantity": 56940000, "zhang": 56940, "weight": 0.86, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 56940, "prev_weight": 0.86, "prev_quantity": 56940000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2027", "name": "大成鋼", "quantity": 71700000, "zhang": 71700, "weight": 0.64, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 71700, "prev_weight": 0.64, "prev_quantity": 71700000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1477", "name": "聚陽", "quantity": 13410000, "zhang": 13410, "weight": 0.62, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 13410, "prev_weight": 0.62, "prev_quantity": 13410000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "3211", "name": "順達", "quantity": 7560000, "zhang": 7560, "weight": 0.62, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 7560, "prev_weight": 0.62, "prev_quantity": 7560000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2458", "name": "義隆", "quantity": 16080000, "zhang": 16080, "weight": 0.55, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 16080, "prev_weight": 0.55, "prev_quantity": 16080000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "8112", "name": "至上", "quantity": 29539000, "zhang": 29539, "weight": 0.54, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 29539, "prev_weight": 0.54, "prev_quantity": 29539000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2606", "name": "裕民", "quantity": 38643000, "zhang": 38643, "weight": 0.54, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 38643, "prev_weight": 0.54, "prev_quantity": 38643000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "1215", "name": "卜蜂", "quantity": 14460000, "zhang": 14460, "weight": 0.44, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 14460, "prev_weight": 0.44, "prev_quantity": 14460000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6670", "name": "復盛應用", "quantity": 7720000, "zhang": 7720, "weight": 0.43, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 7720, "prev_weight": 0.43, "prev_quantity": 7720000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6412", "name": "群電", "quantity": 19510000, "zhang": 19510, "weight": 0.42, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 19510, "prev_weight": 0.42, "prev_quantity": 19510000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4915", "name": "致伸", "quantity": 26366000, "zhang": 26366, "weight": 0.4, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 26366, "prev_weight": 0.4, "prev_quantity": 26366000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "8070", "name": "長華*", "quantity": 40700000, "zhang": 40700, "weight": 0.39, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 40700, "prev_weight": 0.39, "prev_quantity": 40700000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "4763", "name": "材料*-KY", "quantity": 41500000, "zhang": 41500, "weight": 0.38, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 41500, "prev_weight": 0.38, "prev_quantity": 41500000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "2211", "name": "長榮鋼", "quantity": 19660000, "zhang": 19660, "weight": 0.38, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 19660, "prev_weight": 0.38, "prev_quantity": 19660000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6757", "name": "台灣虎航", "quantity": 26920000, "zhang": 26920, "weight": 0.31, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 26920, "prev_weight": 0.31, "prev_quantity": 26920000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6005", "name": "群益證", "quantity": 28336000, "zhang": 28336, "weight": 0.19, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 28336, "prev_weight": 0.19, "prev_quantity": 28336000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "8422", "name": "可寧衛*", "quantity": 31040000, "zhang": 31040, "weight": 0.18, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 31040, "prev_weight": 0.18, "prev_quantity": 31040000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}, {"code": "6278", "name": "台表科", "quantity": 2932000, "zhang": 2932, "weight": 0.15, "is_financial": false, "item_type": "stock", "display_unit": "張", "prev_zhang": 2932, "prev_weight": 0.15, "prev_quantity": 2932000, "change_zhang": 0, "change_weight": 0.0, "change_quantity": 0, "is_new": false}], "aum": "4,682.09 億", "prev_date": "2026/05/21"}};
+const UPDATE_TIME = "2026/05/24 14:54";
+
+document.getElementById('update-time').textContent = UPDATE_TIME;
+
+// ── 排序狀態
+const sortState = {};
+
+// ── 金融股摘要文字（表格 memo 欄）
+function finSummary(h) {
+  if (!h.is_financial) return '';
+  const parts = [];
+  const chg = h.change_zhang;
+  if (h.is_new) parts.push('🆕 新進成分股');
+  else if (chg > 0)  parts.push(`↑ 增加 ${Math.abs(chg).toLocaleString()} 張`);
+  else if (chg < 0)  parts.push(`↓ 減少 ${Math.abs(chg).toLocaleString()} 張`);
+  else if (chg === 0) parts.push('持平');
+  parts.push(`權重 ${h.weight}%`);
+  if (h.change_weight != null && h.change_weight !== 0) {
+    const wSign = h.change_weight > 0 ? '+' : '';
+    parts.push(`(${wSign}${h.change_weight.toFixed(2)}%)`);
+  }
+  return parts.join('　');
+}
+
+function renderTable(code) {
+  const data = RAW_DATA[code];
+  if (!data) return;
+
+  const meta = ETF_META[code];
+  document.getElementById(`date-${code}`).textContent = data.date || '－';
+
+  // AUM 規模
+  const aumEl = document.getElementById(`aum-${code}`);
+  if (aumEl) {
+    if (data.aum) {
+      aumEl.textContent = '規模 ' + data.aum;
+      aumEl.style.display = '';
+    } else {
+      aumEl.style.display = 'none';
+    }
+  }
+
+  const holdings = data.holdings || [];
+  const stockCnt = holdings.filter(h => !h.item_type || h.item_type === 'stock').length;
+  const nonsCnt  = holdings.length - stockCnt;
+  document.getElementById(`count-${code}`).textContent =
+    nonsCnt > 0 ? `${stockCnt} 支個股 + ${nonsCnt} 筆非個股` : `${stockCnt} 支`;
+
+  // ── 金融股每日變化摘要
+  const finList    = holdings.filter(h => h.is_financial);
+  const finWeight  = finList.reduce((s, h) => s + (h.weight || 0), 0);
+  const prevFinW   = finList.reduce((s, h) => s + (h.prev_weight || 0), 0);
+  const finWChange = finWeight - prevFinW;
+  const finNew     = finList.filter(h => h.is_new);
+  const finUp      = finList.filter(h => !h.is_new && h.change_zhang > 0)
+                            .sort((a,b) => b.change_zhang - a.change_zhang);
+  const finDown    = finList.filter(h => !h.is_new && h.change_zhang < 0)
+                            .sort((a,b) => a.change_zhang - b.change_zhang);
+
+  let finHtml = '';
+  if (finList.length > 0) {
+    const prevLabel = data.prev_date ? ` vs ${data.prev_date}` : '';
+    const wSign = finWChange >= 0 ? '+' : '';
+    const wChgStr = (prevFinW > 0) ? `　${wSign}${finWChange.toFixed(2)}%` : '';
+    finHtml += `
+      <div class="fin-chip fin-chip-total">
+        <span class="chip-label">💜 金融股總計${prevLabel}</span>
+        <span class="chip-val">${finList.length} 支｜${finWeight.toFixed(2)}%${wChgStr}</span>
+      </div>`;
+    if (finNew.length > 0) {
+      finHtml += `
+        <div class="fin-chip fin-chip-new">
+          <span class="chip-label">🆕 新進金融股</span>
+          <span class="chip-val">${finNew.map(h => h.code + ' ' + h.name).join('、')}</span>
+        </div>`;
+    }
+    if (finUp.length > 0) {
+      finHtml += `
+        <div class="fin-chip fin-chip-up">
+          <span class="chip-label">↑ 加碼 (${finUp.length} 支)</span>
+          <span class="chip-val">${finUp.slice(0,4).map(h => h.code).join('、')}</span>
+          <span class="chip-sub">${finUp.slice(0,4).map(h => '+' + h.change_zhang.toLocaleString() + '張').join(' ')}</span>
+        </div>`;
+    }
+    if (finDown.length > 0) {
+      finHtml += `
+        <div class="fin-chip fin-chip-down">
+          <span class="chip-label">↓ 減碼 (${finDown.length} 支)</span>
+          <span class="chip-val">${finDown.slice(0,4).map(h => h.code).join('、')}</span>
+          <span class="chip-sub">${finDown.slice(0,4).map(h => h.change_zhang.toLocaleString() + '張').join(' ')}</span>
+        </div>`;
+    }
+  }
+  document.getElementById(`fin-summary-${code}`).innerHTML = finHtml;
+
+  // ── 一般成分股摘要（漲減新）
+  const upList   = holdings.filter(h => h.change_zhang > 0);
+  const downList = holdings.filter(h => h.change_zhang < 0);
+  const newList  = holdings.filter(h => h.is_new);
+  let summaryHtml = '';
+  if (upList.length > 0) summaryHtml += `
+    <div class="summary-chip chip-up">
+      <span class="chip-label">↑ 增加張數</span>
+      <span class="chip-val">${upList.length} 支</span>
+    </div>`;
+  if (downList.length > 0) summaryHtml += `
+    <div class="summary-chip chip-down">
+      <span class="chip-label">↓ 減少張數</span>
+      <span class="chip-val">${downList.length} 支</span>
+    </div>`;
+  if (newList.length > 0) summaryHtml += `
+    <div class="summary-chip chip-new">
+      <span class="chip-label">🆕 新進成分股</span>
+      <span class="chip-val">${newList.length} 支</span>
+    </div>`;
+  document.getElementById(`summary-${code}`).innerHTML = summaryHtml;
+
+  // ── 錯誤／警告訊息
+  const panelEl = document.getElementById(`panel-${code}`);
+  ['error-box','partial-box'].forEach(id => {
+    const el = panelEl.querySelector('#'+id);
+    if (el) el.remove();
+  });
+  if (data.error) {
+    const div = document.createElement('div');
+    div.id = 'error-box'; div.className = 'error-msg';
+    div.textContent = '⚠ ' + data.error;
+    panelEl.querySelector('.table-controls').before(div);
+  }
+  if (data.partial) {
+    const div = document.createElement('div');
+    div.id = 'partial-box'; div.className = 'partial-msg';
+    div.textContent = '⚠ 資料不完整（僅部分成分股）。完整資料請執行: python fetch_etf.py';
+    panelEl.querySelector('.table-controls').before(div);
+  }
+
+  renderRows(code, holdings);
+}
+
+function getTypeLabel(t) {
+  return {futures:'期貨',bond:'債券',cash:'現金',margin:'保證金',payable:'應付款',other:'其他'}[t] || t;
+}
+function fmtAmount(qty) {
+  const abs = Math.abs(qty), sign = qty < 0 ? '-' : '';
+  if (abs >= 1e8) return sign + (abs/1e8).toFixed(2) + ' 億';
+  if (abs >= 1e3) return sign + Math.round(abs/1e3).toLocaleString() + ' 千';
+  return qty.toLocaleString();
+}
+function renderRows(code, holdings) {
+  const stocks = holdings.filter(h => !h.item_type || h.item_type === 'stock');
+  const maxWeight = Math.max(...stocks.map(h => h.weight || 0), 0.01);
+  const tbody = document.getElementById(`tbody-${code}`);
+  if (!holdings.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="no-data">暫無資料，請執行 python fetch_etf.py 更新</td></tr>';
+    return;
+  }
+  tbody.innerHTML = holdings.map(h => {
+    const isStock   = !h.item_type || h.item_type === 'stock';
+    const isFutures = h.item_type === 'futures';
+    const typeBadge = !isStock ? `<span class="type-badge type-${h.item_type}">${getTypeLabel(h.item_type)}</span>` : '';
+    const finBadge  = h.is_financial ? '<span class="fin-badge">金融</span>' : '';
+    const newBadge  = '';
+    let todayQty, prevQty;
+    if (isStock) {
+      todayQty = h.zhang != null ? h.zhang.toLocaleString() + ' 張' : 'N/A';
+      prevQty  = h.prev_zhang != null ? h.prev_zhang.toLocaleString() + ' 張' : 'N/A';
+    } else if (isFutures) {
+      todayQty = h.quantity != null ? h.quantity.toLocaleString() + ' 口' : 'N/A';
+      prevQty  = h.prev_quantity != null ? h.prev_quantity.toLocaleString() + ' 口' : '－';
+    } else {
+      todayQty = h.quantity != null ? fmtAmount(h.quantity) : 'N/A';
+      prevQty  = h.prev_quantity != null ? fmtAmount(h.prev_quantity) : '－';
+    }
+    let changeHtml = '<span class="change-null">－</span>';
+    if (isStock && h.change_zhang !== null && h.change_zhang !== undefined) {
+      if (h.is_new)             changeHtml = `<span class="change-up">+${h.zhang.toLocaleString()} 🆕</span>`;
+      else if (h.change_zhang > 0)  changeHtml = `<span class="change-up arrow-up">▲ ${h.change_zhang.toLocaleString()}</span>`;
+      else if (h.change_zhang < 0)  changeHtml = `<span class="change-down arrow-down">▼ ${Math.abs(h.change_zhang).toLocaleString()}</span>`;
+      else                          changeHtml = '<span class="change-zero">＝ 0</span>';
+    } else if (isFutures && h.change_quantity !== null && h.change_quantity !== undefined) {
+      if (h.change_quantity > 0)    changeHtml = `<span class="change-up arrow-up">▲ ${h.change_quantity.toLocaleString()} 口</span>`;
+      else if (h.change_quantity < 0) changeHtml = `<span class="change-down arrow-down">▼ ${Math.abs(h.change_quantity).toLocaleString()} 口</span>`;
+      else                            changeHtml = '<span class="change-zero">＝ 0</span>';
+    }
+    const barW = isStock ? Math.round((h.weight/maxWeight)*70) : Math.min(Math.round(h.weight*10),70);
+    const weightCell = h.weight > 0
+      ? `<span class="weight-bar" style="width:${barW}px"><span class="weight-fill" style="width:100%;background:${ETF_META[code].color}"></span></span>${h.weight.toFixed(2)}%`
+      : '－';
+    const memo = isStock && h.is_financial ? `<span class="memo-fin">${finSummary(h)}</span>` : '';
+    const rowCls = [h.is_financial ? 'fin-row' : '', !isStock ? 'nonstock-row' : ''].filter(Boolean).join(' ');
+    return `<tr class="${rowCls}" data-code="${h.code}" data-name="${h.name}"
+                data-fin="${h.is_financial ? '1' : '0'}" data-type="${h.item_type || 'stock'}">
+      <td class="code-cell">${h.code}${typeBadge}${finBadge}${newBadge}</td>
+      <td>${h.name}${h.contract_month ? '<span style="color:#888;font-size:11px"> (' + h.contract_month + ')</span>' : ''}</td>
+      <td class="num-col">${todayQty}</td>
+      <td class="num-col">${prevQty}</td>
+      <td class="num-col">${changeHtml}</td>
+      <td class="num-col">${weightCell}</td>
+      <td class="memo-cell">${memo}</td>
+    </tr>`;
+  }).join('');
+}
+
+function showTab(code) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('tab-' + code).classList.add('active');
+  document.getElementById('panel-' + code).style.display = 'block';
+}
+
+const _typeFilters = {};
+function setTypeFilter(code, type, btn) {
+  _typeFilters[code] = type;
+  document.querySelectorAll(`#type-btns-${code} button`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterTable(code);
+}
+function filterTable(code, searchVal) {
+  const panel = document.getElementById(`panel-${code}`);
+  const search = (searchVal !== undefined ? searchVal : panel.querySelector('.search-input').value).toLowerCase();
+  const finOnly    = document.getElementById(`fin-filter-${code}`).checked;
+  const typeFilter = _typeFilters[code] || 'all';
+  document.querySelectorAll(`#tbody-${code} tr`).forEach(tr => {
+    const c = (tr.dataset.code || '').toLowerCase();
+    const n = (tr.dataset.name || '').toLowerCase();
+    const isFin   = tr.dataset.fin  === '1';
+    const rtype   = tr.dataset.type || 'stock';
+    const isStock = rtype === 'stock';
+    const matchSearch = !search || c.includes(search) || n.includes(search);
+    const matchFin    = !finOnly || isFin;
+    const matchType   = typeFilter === 'all'
+                      || (typeFilter === 'stock'    &&  isStock)
+                      || (typeFilter === 'nonstock' && !isStock);
+    tr.style.display = (matchSearch && matchFin && matchType) ? '' : 'none';
+  });
+}
+
+function sortTable(code, colIdx) {
+  const key = `${code}_${colIdx}`;
+  const asc = sortState[key] = !sortState[key];
+  const tbody = document.getElementById(`tbody-${code}`);
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort((a, b) => {
+    const av = a.querySelectorAll('td')[colIdx]?.textContent.trim() || '';
+    const bv = b.querySelectorAll('td')[colIdx]?.textContent.trim() || '';
+    const an = parseFloat(av.replace(/[^0-9.\-]/g, ''));
+    const bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
+    if (!isNaN(an) && !isNaN(bn)) return asc ? an - bn : bn - an;
+    return asc ? av.localeCompare(bv, 'zh-TW') : bv.localeCompare(av, 'zh-TW');
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+// 初始化所有 panel
+Object.keys(RAW_DATA).forEach(code => renderTable(code));
+</script>
+</body>
+</html>

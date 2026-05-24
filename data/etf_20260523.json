@@ -1,0 +1,1538 @@
+{
+  "0050": {
+    "date": "2026/05/22",
+    "holdings": [
+      {
+        "code": "2330",
+        "name": "台積電",
+        "quantity": 482783146,
+        "zhang": 482783,
+        "weight": 59.37,
+        "is_financial": false
+      },
+      {
+        "code": "2454",
+        "name": "聯發科",
+        "quantity": 29071734,
+        "zhang": 29071,
+        "weight": 6.12,
+        "is_financial": false
+      },
+      {
+        "code": "2308",
+        "name": "台達電",
+        "quantity": 38379660,
+        "zhang": 38379,
+        "weight": 4.38,
+        "is_financial": false
+      },
+      {
+        "code": "2317",
+        "name": "鴻海",
+        "quantity": 241111804,
+        "zhang": 241111,
+        "weight": 3.29,
+        "is_financial": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "quantity": 65076625,
+        "zhang": 65076,
+        "weight": 1.99,
+        "is_financial": false
+      },
+      {
+        "code": "2383",
+        "name": "台光電",
+        "quantity": 5673674,
+        "zhang": 5673,
+        "weight": 1.55,
+        "is_financial": false
+      },
+      {
+        "code": "2303",
+        "name": "聯電",
+        "quantity": 229815420,
+        "zhang": 229815,
+        "weight": 1.43,
+        "is_financial": false
+      },
+      {
+        "code": "3037",
+        "name": "欣興",
+        "quantity": 26377812,
+        "zhang": 26377,
+        "weight": 1.4,
+        "is_financial": false
+      },
+      {
+        "code": "2345",
+        "name": "智邦",
+        "quantity": 9820966,
+        "zhang": 9820,
+        "weight": 1.32,
+        "is_financial": false
+      },
+      {
+        "code": "2891",
+        "name": "中信金",
+        "quantity": 350158442,
+        "zhang": 350158,
+        "weight": 1.1,
+        "is_financial": true
+      },
+      {
+        "code": "2327",
+        "name": "國巨*",
+        "quantity": 30610783,
+        "zhang": 30610,
+        "weight": 1.05,
+        "is_financial": false
+      },
+      {
+        "code": "2360",
+        "name": "致茂",
+        "quantity": 7307235,
+        "zhang": 7307,
+        "weight": 0.9,
+        "is_financial": false
+      },
+      {
+        "code": "2382",
+        "name": "廣達",
+        "quantity": 52230418,
+        "zhang": 52230,
+        "weight": 0.9,
+        "is_financial": false
+      },
+      {
+        "code": "3017",
+        "name": "奇鋐",
+        "quantity": 6419671,
+        "zhang": 6419,
+        "weight": 0.89,
+        "is_financial": false
+      },
+      {
+        "code": "2881",
+        "name": "富邦金",
+        "quantity": 164534301,
+        "zhang": 164534,
+        "weight": 0.85,
+        "is_financial": true
+      },
+      {
+        "code": "2882",
+        "name": "國泰金",
+        "quantity": 184621877,
+        "zhang": 184621,
+        "weight": 0.8,
+        "is_financial": true
+      },
+      {
+        "code": "2885",
+        "name": "元大金",
+        "quantity": 215056616,
+        "zhang": 215056,
+        "weight": 0.65,
+        "is_financial": true
+      },
+      {
+        "code": "6669",
+        "name": "緯穎",
+        "quantity": 2040558,
+        "zhang": 2040,
+        "weight": 0.61,
+        "is_financial": false
+      },
+      {
+        "code": "2887",
+        "name": "台新新光金",
+        "quantity": 453562770,
+        "zhang": 453562,
+        "weight": 0.59,
+        "is_financial": true
+      },
+      {
+        "code": "2412",
+        "name": "中華電",
+        "quantity": 75247800,
+        "zhang": 75247,
+        "weight": 0.56,
+        "is_financial": false
+      },
+      {
+        "code": "2884",
+        "name": "玉山金",
+        "quantity": 302633661,
+        "zhang": 302633,
+        "weight": 0.52,
+        "is_financial": true
+      },
+      {
+        "code": "2886",
+        "name": "兆豐金",
+        "quantity": 232889361,
+        "zhang": 232889,
+        "weight": 0.51,
+        "is_financial": true
+      },
+      {
+        "code": "2357",
+        "name": "華碩",
+        "quantity": 13466176,
+        "zhang": 13466,
+        "weight": 0.5,
+        "is_financial": false
+      },
+      {
+        "code": "2368",
+        "name": "金像電",
+        "quantity": 6787494,
+        "zhang": 6787,
+        "weight": 0.49,
+        "is_financial": false
+      },
+      {
+        "code": "3231",
+        "name": "緯創",
+        "quantity": 60319789,
+        "zhang": 60319,
+        "weight": 0.48,
+        "is_financial": false
+      },
+      {
+        "code": "7769",
+        "name": "鴻勁",
+        "quantity": 1125080,
+        "zhang": 1125,
+        "weight": 0.47,
+        "is_financial": false
+      },
+      {
+        "code": "1303",
+        "name": "南亞",
+        "quantity": 97154923,
+        "zhang": 97154,
+        "weight": 0.46,
+        "is_financial": false
+      },
+      {
+        "code": "2301",
+        "name": "光寶科",
+        "quantity": 38300588,
+        "zhang": 38300,
+        "weight": 0.43,
+        "is_financial": false
+      },
+      {
+        "code": "2344",
+        "name": "華邦電",
+        "quantity": 61527602,
+        "zhang": 61527,
+        "weight": 0.42,
+        "is_financial": false
+      },
+      {
+        "code": "3661",
+        "name": "世芯-KY",
+        "quantity": 1566367,
+        "zhang": 1566,
+        "weight": 0.42,
+        "is_financial": false
+      },
+      {
+        "code": "2890",
+        "name": "永豐金",
+        "quantity": 250071157,
+        "zhang": 250071,
+        "weight": 0.4,
+        "is_financial": true
+      },
+      {
+        "code": "1216",
+        "name": "統一",
+        "quantity": 97092586,
+        "zhang": 97092,
+        "weight": 0.38,
+        "is_financial": false
+      },
+      {
+        "code": "2408",
+        "name": "南亞科",
+        "quantity": 22145350,
+        "zhang": 22145,
+        "weight": 0.37,
+        "is_financial": false
+      },
+      {
+        "code": "2883",
+        "name": "凱基金",
+        "quantity": 311466123,
+        "zhang": 311466,
+        "weight": 0.37,
+        "is_financial": true
+      },
+      {
+        "code": "3008",
+        "name": "大立光",
+        "quantity": 1892780,
+        "zhang": 1892,
+        "weight": 0.37,
+        "is_financial": false
+      },
+      {
+        "code": "2449",
+        "name": "京元電子",
+        "quantity": 21445726,
+        "zhang": 21445,
+        "weight": 0.35,
+        "is_financial": false
+      },
+      {
+        "code": "3653",
+        "name": "健策",
+        "quantity": 1661839,
+        "zhang": 1661,
+        "weight": 0.33,
+        "is_financial": false
+      },
+      {
+        "code": "2880",
+        "name": "華南金",
+        "quantity": 183440837,
+        "zhang": 183440,
+        "weight": 0.32,
+        "is_financial": true
+      },
+      {
+        "code": "2892",
+        "name": "第一金",
+        "quantity": 213963655,
+        "zhang": 213963,
+        "weight": 0.32,
+        "is_financial": true
+      },
+      {
+        "code": "2059",
+        "name": "川湖",
+        "quantity": 1119113,
+        "zhang": 1119,
+        "weight": 0.31,
+        "is_financial": false
+      },
+      {
+        "code": "2603",
+        "name": "長榮",
+        "quantity": 21425034,
+        "zhang": 21425,
+        "weight": 0.26,
+        "is_financial": false
+      },
+      {
+        "code": "5880",
+        "name": "合庫金",
+        "quantity": 206338422,
+        "zhang": 206338,
+        "weight": 0.26,
+        "is_financial": true
+      },
+      {
+        "code": "2395",
+        "name": "研華",
+        "quantity": 9053840,
+        "zhang": 9053,
+        "weight": 0.23,
+        "is_financial": false
+      },
+      {
+        "code": "2002",
+        "name": "中鋼",
+        "quantity": 220399132,
+        "zhang": 220399,
+        "weight": 0.22,
+        "is_financial": false
+      },
+      {
+        "code": "1301",
+        "name": "台塑",
+        "quantity": 82727651,
+        "zhang": 82727,
+        "weight": 0.2,
+        "is_financial": false
+      },
+      {
+        "code": "4904",
+        "name": "遠傳",
+        "quantity": 34975982,
+        "zhang": 34975,
+        "weight": 0.18,
+        "is_financial": false
+      },
+      {
+        "code": "3045",
+        "name": "台灣大",
+        "quantity": 27871276,
+        "zhang": 27871,
+        "weight": 0.17,
+        "is_financial": false
+      },
+      {
+        "code": "2207",
+        "name": "和泰車",
+        "quantity": 5518092,
+        "zhang": 5518,
+        "weight": 0.14,
+        "is_financial": false
+      },
+      {
+        "code": "6919",
+        "name": "康霈*",
+        "quantity": 18997617,
+        "zhang": 18997,
+        "weight": 0.11,
+        "is_financial": false
+      },
+      {
+        "code": "6505",
+        "name": "台塑化",
+        "quantity": 23477296,
+        "zhang": 23477,
+        "weight": 0.07,
+        "is_financial": false
+      }
+    ]
+  },
+  "0056": {
+    "date": "2026/05/22",
+    "holdings": [
+      {
+        "code": "2454",
+        "name": "聯發科",
+        "quantity": 15492887,
+        "zhang": 15492,
+        "weight": 9.38,
+        "is_financial": false
+      },
+      {
+        "code": "2303",
+        "name": "聯電",
+        "quantity": 414523694,
+        "zhang": 414523,
+        "weight": 7.41,
+        "is_financial": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "quantity": 63578291,
+        "zhang": 63578,
+        "weight": 5.59,
+        "is_financial": false
+      },
+      {
+        "code": "2891",
+        "name": "中信金",
+        "quantity": 451700543,
+        "zhang": 451700,
+        "weight": 4.08,
+        "is_financial": true
+      },
+      {
+        "code": "2382",
+        "name": "廣達",
+        "quantity": 75444794,
+        "zhang": 75444,
+        "weight": 3.74,
+        "is_financial": false
+      },
+      {
+        "code": "2357",
+        "name": "華碩",
+        "quantity": 34622470,
+        "zhang": 34622,
+        "weight": 3.7,
+        "is_financial": false
+      },
+      {
+        "code": "2885",
+        "name": "元大金",
+        "quantity": 376298033,
+        "zhang": 376298,
+        "weight": 3.25,
+        "is_financial": true
+      },
+      {
+        "code": "2603",
+        "name": "長榮",
+        "quantity": 91700988,
+        "zhang": 91700,
+        "weight": 3.15,
+        "is_financial": false
+      },
+      {
+        "code": "2301",
+        "name": "光寶科",
+        "quantity": 94488919,
+        "zhang": 94488,
+        "weight": 3.07,
+        "is_financial": false
+      },
+      {
+        "code": "3231",
+        "name": "緯創",
+        "quantity": 120158584,
+        "zhang": 120158,
+        "weight": 2.72,
+        "is_financial": false
+      },
+      {
+        "code": "2880",
+        "name": "華南金",
+        "quantity": 516029221,
+        "zhang": 516029,
+        "weight": 2.59,
+        "is_financial": true
+      },
+      {
+        "code": "3036",
+        "name": "文曄",
+        "quantity": 57232727,
+        "zhang": 57232,
+        "weight": 2.59,
+        "is_financial": false
+      },
+      {
+        "code": "2890",
+        "name": "永豐金",
+        "quantity": 553381147,
+        "zhang": 553381,
+        "weight": 2.53,
+        "is_financial": true
+      },
+      {
+        "code": "2317",
+        "name": "鴻海",
+        "quantity": 63663134,
+        "zhang": 63663,
+        "weight": 2.5,
+        "is_financial": false
+      },
+      {
+        "code": "2449",
+        "name": "京元電子",
+        "quantity": 53483200,
+        "zhang": 53483,
+        "weight": 2.48,
+        "is_financial": false
+      },
+      {
+        "code": "3045",
+        "name": "台灣大",
+        "quantity": 138987130,
+        "zhang": 138987,
+        "weight": 2.44,
+        "is_financial": false
+      },
+      {
+        "code": "2886",
+        "name": "兆豐金",
+        "quantity": 370240135,
+        "zhang": 370240,
+        "weight": 2.32,
+        "is_financial": true
+      },
+      {
+        "code": "2379",
+        "name": "瑞昱",
+        "quantity": 25065590,
+        "zhang": 25065,
+        "weight": 2.27,
+        "is_financial": false
+      },
+      {
+        "code": "1216",
+        "name": "統一",
+        "quantity": 193335949,
+        "zhang": 193335,
+        "weight": 2.17,
+        "is_financial": false
+      },
+      {
+        "code": "3034",
+        "name": "聯詠",
+        "quantity": 28213324,
+        "zhang": 28213,
+        "weight": 2.15,
+        "is_financial": false
+      },
+      {
+        "code": "2883",
+        "name": "凱基金",
+        "quantity": 580807859,
+        "zhang": 580807,
+        "weight": 1.98,
+        "is_financial": true
+      },
+      {
+        "code": "3044",
+        "name": "健鼎",
+        "quantity": 24526467,
+        "zhang": 24526,
+        "weight": 1.89,
+        "is_financial": false
+      },
+      {
+        "code": "2884",
+        "name": "玉山金",
+        "quantity": 357304094,
+        "zhang": 357304,
+        "weight": 1.75,
+        "is_financial": true
+      },
+      {
+        "code": "2887",
+        "name": "台新新光金",
+        "quantity": 431175634,
+        "zhang": 431175,
+        "weight": 1.61,
+        "is_financial": true
+      },
+      {
+        "code": "2376",
+        "name": "技嘉",
+        "quantity": 31251610,
+        "zhang": 31251,
+        "weight": 1.58,
+        "is_financial": false
+      },
+      {
+        "code": "6239",
+        "name": "力成",
+        "quantity": 35635132,
+        "zhang": 35635,
+        "weight": 1.58,
+        "is_financial": false
+      },
+      {
+        "code": "4938",
+        "name": "和碩",
+        "quantity": 119121638,
+        "zhang": 119121,
+        "weight": 1.51,
+        "is_financial": false
+      },
+      {
+        "code": "2356",
+        "name": "英業達",
+        "quantity": 161131955,
+        "zhang": 161131,
+        "weight": 1.5,
+        "is_financial": false
+      },
+      {
+        "code": "2618",
+        "name": "長榮航",
+        "quantity": 250645461,
+        "zhang": 250645,
+        "weight": 1.4,
+        "is_financial": false
+      },
+      {
+        "code": "3702",
+        "name": "大聯大",
+        "quantity": 75019656,
+        "zhang": 75019,
+        "weight": 1.39,
+        "is_financial": false
+      },
+      {
+        "code": "5876",
+        "name": "上海商銀",
+        "quantity": 211751060,
+        "zhang": 211751,
+        "weight": 1.33,
+        "is_financial": false
+      },
+      {
+        "code": "2347",
+        "name": "聯強",
+        "quantity": 80250057,
+        "zhang": 80250,
+        "weight": 1.06,
+        "is_financial": false
+      },
+      {
+        "code": "6285",
+        "name": "啟碁",
+        "quantity": 22671885,
+        "zhang": 22671,
+        "weight": 1.05,
+        "is_financial": false
+      },
+      {
+        "code": "2324",
+        "name": "仁寶",
+        "quantity": 201971210,
+        "zhang": 201971,
+        "weight": 1.0,
+        "is_financial": false
+      },
+      {
+        "code": "1102",
+        "name": "亞泥",
+        "quantity": 148061618,
+        "zhang": 148061,
+        "weight": 0.8,
+        "is_financial": false
+      },
+      {
+        "code": "2105",
+        "name": "正新",
+        "quantity": 152175756,
+        "zhang": 152175,
+        "weight": 0.76,
+        "is_financial": false
+      },
+      {
+        "code": "2474",
+        "name": "可成",
+        "quantity": 25938136,
+        "zhang": 25938,
+        "weight": 0.76,
+        "is_financial": false
+      },
+      {
+        "code": "2377",
+        "name": "微星",
+        "quantity": 38017806,
+        "zhang": 38017,
+        "weight": 0.74,
+        "is_financial": false
+      },
+      {
+        "code": "2027",
+        "name": "大成鋼",
+        "quantity": 104932697,
+        "zhang": 104932,
+        "weight": 0.69,
+        "is_financial": false
+      },
+      {
+        "code": "2385",
+        "name": "群光",
+        "quantity": 33433493,
+        "zhang": 33433,
+        "weight": 0.69,
+        "is_financial": false
+      },
+      {
+        "code": "2353",
+        "name": "宏碁",
+        "quantity": 130958843,
+        "zhang": 130958,
+        "weight": 0.61,
+        "is_financial": false
+      },
+      {
+        "code": "3023",
+        "name": "信邦",
+        "quantity": 11118007,
+        "zhang": 11118,
+        "weight": 0.55,
+        "is_financial": false
+      },
+      {
+        "code": "3005",
+        "name": "神基",
+        "quantity": 28978792,
+        "zhang": 28978,
+        "weight": 0.47,
+        "is_financial": false
+      },
+      {
+        "code": "9904",
+        "name": "寶成",
+        "quantity": 110018708,
+        "zhang": 110018,
+        "weight": 0.45,
+        "is_financial": false
+      },
+      {
+        "code": "1477",
+        "name": "聚陽",
+        "quantity": 11352462,
+        "zhang": 11352,
+        "weight": 0.39,
+        "is_financial": false
+      },
+      {
+        "code": "2645",
+        "name": "長榮航太",
+        "quantity": 13811586,
+        "zhang": 13811,
+        "weight": 0.35,
+        "is_financial": false
+      },
+      {
+        "code": "1319",
+        "name": "東陽",
+        "quantity": 26588656,
+        "zhang": 26588,
+        "weight": 0.34,
+        "is_financial": false
+      },
+      {
+        "code": "2006",
+        "name": "東和鋼鐵",
+        "quantity": 32966570,
+        "zhang": 32966,
+        "weight": 0.34,
+        "is_financial": false
+      },
+      {
+        "code": "6176",
+        "name": "瑞儀",
+        "quantity": 19815461,
+        "zhang": 19815,
+        "weight": 0.33,
+        "is_financial": false
+      }
+    ]
+  },
+  "006208": {
+    "date": "2026/05/22",
+    "holdings": [
+      {
+        "code": "2330",
+        "name": "台積電",
+        "quantity": 109345064,
+        "zhang": 109345,
+        "weight": 59.3958,
+        "is_financial": false
+      },
+      {
+        "code": "2454",
+        "name": "聯發科",
+        "quantity": 6587042,
+        "zhang": 6587,
+        "weight": 6.1247,
+        "is_financial": false
+      },
+      {
+        "code": "2308",
+        "name": "台達電",
+        "quantity": 8654581,
+        "zhang": 8654,
+        "weight": 4.3675,
+        "is_financial": false
+      },
+      {
+        "code": "2317",
+        "name": "鴻海",
+        "quantity": 54551679,
+        "zhang": 54551,
+        "weight": 3.2851,
+        "is_financial": false
+      },
+      {
+        "code": "3711",
+        "name": "日月光投控",
+        "quantity": 14673577,
+        "zhang": 14673,
+        "weight": 1.9829,
+        "is_financial": false
+      },
+      {
+        "code": "2383",
+        "name": "台光電",
+        "quantity": 1282000,
+        "zhang": 1282,
+        "weight": 1.5456,
+        "is_financial": false
+      },
+      {
+        "code": "2303",
+        "name": "聯電",
+        "quantity": 52130891,
+        "zhang": 52130,
+        "weight": 1.4315,
+        "is_financial": false
+      },
+      {
+        "code": "3037",
+        "name": "欣興",
+        "quantity": 5968000,
+        "zhang": 5968,
+        "weight": 1.3944,
+        "is_financial": false
+      },
+      {
+        "code": "2345",
+        "name": "智邦",
+        "quantity": 2218000,
+        "zhang": 2218,
+        "weight": 1.3196,
+        "is_financial": false
+      },
+      {
+        "code": "2891",
+        "name": "中信金",
+        "quantity": 78975506,
+        "zhang": 78975,
+        "weight": 1.0957,
+        "is_financial": true
+      },
+      {
+        "code": "2327",
+        "name": "國巨*",
+        "quantity": 6944728,
+        "zhang": 6944,
+        "weight": 1.0522,
+        "is_financial": false
+      },
+      {
+        "code": "2360",
+        "name": "致茂",
+        "quantity": 1650000,
+        "zhang": 1650,
+        "weight": 0.9022,
+        "is_financial": false
+      },
+      {
+        "code": "2382",
+        "name": "廣達",
+        "quantity": 11803301,
+        "zhang": 11803,
+        "weight": 0.8984,
+        "is_financial": false
+      },
+      {
+        "code": "3017",
+        "name": "奇鋐",
+        "quantity": 1451000,
+        "zhang": 1451,
+        "weight": 0.8895,
+        "is_financial": false
+      },
+      {
+        "code": "2881",
+        "name": "富邦金",
+        "quantity": 37323543,
+        "zhang": 37323,
+        "weight": 0.855,
+        "is_financial": true
+      },
+      {
+        "code": "2882",
+        "name": "國泰金",
+        "quantity": 41879200,
+        "zhang": 41879,
+        "weight": 0.804,
+        "is_financial": true
+      },
+      {
+        "code": "2885",
+        "name": "元大金",
+        "quantity": 48737456,
+        "zhang": 48737,
+        "weight": 0.6468,
+        "is_financial": true
+      },
+      {
+        "code": "6669",
+        "name": "緯穎",
+        "quantity": 463000,
+        "zhang": 463,
+        "weight": 0.6162,
+        "is_financial": false
+      },
+      {
+        "code": "2887",
+        "name": "台新新光金",
+        "quantity": 102839500,
+        "zhang": 102839,
+        "weight": 0.5895,
+        "is_financial": true
+      },
+      {
+        "code": "2412",
+        "name": "中華電",
+        "quantity": 17069072,
+        "zhang": 17069,
+        "weight": 0.5633,
+        "is_financial": false
+      },
+      {
+        "code": "2884",
+        "name": "玉山金",
+        "quantity": 68648867,
+        "zhang": 68648,
+        "weight": 0.5175,
+        "is_financial": true
+      },
+      {
+        "code": "2886",
+        "name": "兆豐金",
+        "quantity": 52828130,
+        "zhang": 52828,
+        "weight": 0.5077,
+        "is_financial": true
+      },
+      {
+        "code": "2357",
+        "name": "華碩",
+        "quantity": 3054657,
+        "zhang": 3054,
+        "weight": 0.5018,
+        "is_financial": false
+      },
+      {
+        "code": "2368",
+        "name": "金像電",
+        "quantity": 1540000,
+        "zhang": 1540,
+        "weight": 0.4933,
+        "is_financial": false
+      },
+      {
+        "code": "7769",
+        "name": "鴻勁",
+        "quantity": 256000,
+        "zhang": 256,
+        "weight": 0.4766,
+        "is_financial": false
+      },
+      {
+        "code": "3231",
+        "name": "緯創",
+        "quantity": 13683000,
+        "zhang": 13683,
+        "weight": 0.4762,
+        "is_financial": false
+      },
+      {
+        "code": "1303",
+        "name": "南亞",
+        "quantity": 22038502,
+        "zhang": 22038,
+        "weight": 0.4602,
+        "is_financial": false
+      },
+      {
+        "code": "2301",
+        "name": "光寶科",
+        "quantity": 8688000,
+        "zhang": 8688,
+        "weight": 0.4332,
+        "is_financial": false
+      },
+      {
+        "code": "2344",
+        "name": "華邦電",
+        "quantity": 13957000,
+        "zhang": 13957,
+        "weight": 0.4202,
+        "is_financial": false
+      },
+      {
+        "code": "3661",
+        "name": "世芯-KY",
+        "quantity": 356000,
+        "zhang": 356,
+        "weight": 0.4197,
+        "is_financial": false
+      },
+      {
+        "code": "2890",
+        "name": "永豐金",
+        "quantity": 56703373,
+        "zhang": 56703,
+        "weight": 0.3974,
+        "is_financial": true
+      },
+      {
+        "code": "1216",
+        "name": "統一",
+        "quantity": 22024765,
+        "zhang": 22024,
+        "weight": 0.3793,
+        "is_financial": false
+      },
+      {
+        "code": "2408",
+        "name": "南亞科",
+        "quantity": 5024000,
+        "zhang": 5024,
+        "weight": 0.3757,
+        "is_financial": false
+      },
+      {
+        "code": "2883",
+        "name": "凱基金",
+        "quantity": 70539545,
+        "zhang": 70539,
+        "weight": 0.3687,
+        "is_financial": true
+      },
+      {
+        "code": "3008",
+        "name": "大立光",
+        "quantity": 429468,
+        "zhang": 429,
+        "weight": 0.3662,
+        "is_financial": false
+      },
+      {
+        "code": "2449",
+        "name": "京元電子",
+        "quantity": 4865000,
+        "zhang": 4865,
+        "weight": 0.3468,
+        "is_financial": false
+      },
+      {
+        "code": "3653",
+        "name": "健策",
+        "quantity": 377000,
+        "zhang": 377,
+        "weight": 0.3323,
+        "is_financial": false
+      },
+      {
+        "code": "2892",
+        "name": "第一金",
+        "quantity": 48535640,
+        "zhang": 48535,
+        "weight": 0.3221,
+        "is_financial": true
+      },
+      {
+        "code": "2880",
+        "name": "華南金",
+        "quantity": 41612046,
+        "zhang": 41612,
+        "weight": 0.3202,
+        "is_financial": true
+      },
+      {
+        "code": "2059",
+        "name": "川湖",
+        "quantity": 254000,
+        "zhang": 254,
+        "weight": 0.3114,
+        "is_financial": false
+      },
+      {
+        "code": "2603",
+        "name": "長榮",
+        "quantity": 4861000,
+        "zhang": 4861,
+        "weight": 0.2564,
+        "is_financial": false
+      },
+      {
+        "code": "5880",
+        "name": "合庫金",
+        "quantity": 46806109,
+        "zhang": 46806,
+        "weight": 0.2559,
+        "is_financial": true
+      },
+      {
+        "code": "2395",
+        "name": "研華",
+        "quantity": 2054538,
+        "zhang": 2054,
+        "weight": 0.2321,
+        "is_financial": false
+      },
+      {
+        "code": "2002",
+        "name": "中鋼",
+        "quantity": 49995307,
+        "zhang": 49995,
+        "weight": 0.2185,
+        "is_financial": false
+      },
+      {
+        "code": "1301",
+        "name": "台塑",
+        "quantity": 18766117,
+        "zhang": 18766,
+        "weight": 0.2045,
+        "is_financial": false
+      },
+      {
+        "code": "4904",
+        "name": "遠傳",
+        "quantity": 7934506,
+        "zhang": 7934,
+        "weight": 0.1825,
+        "is_financial": false
+      },
+      {
+        "code": "3045",
+        "name": "台灣大",
+        "quantity": 6322368,
+        "zhang": 6322,
+        "weight": 0.1705,
+        "is_financial": false
+      },
+      {
+        "code": "2207",
+        "name": "和泰車",
+        "quantity": 1252044,
+        "zhang": 1252,
+        "weight": 0.1393,
+        "is_financial": false
+      },
+      {
+        "code": "6919",
+        "name": "康霈*",
+        "quantity": 4430000,
+        "zhang": 4430,
+        "weight": 0.1109,
+        "is_financial": false
+      },
+      {
+        "code": "6505",
+        "name": "台塑化",
+        "quantity": 5326203,
+        "zhang": 5326,
+        "weight": 0.0654,
+        "is_financial": false
+      }
+    ]
+  },
+  "00878": {
+    "date": "2026/05/23",
+    "holdings": []
+  },
+  "00919": {
+    "date": "2026/05/22",
+    "holdings": [
+      {
+        "code": "2303",
+        "name": "聯電",
+        "quantity": 602462000,
+        "zhang": 602462,
+        "weight": 14.58,
+        "is_financial": false
+      },
+      {
+        "code": "2891",
+        "name": "中信金",
+        "quantity": 949277000,
+        "zhang": 949277,
+        "weight": 11.61,
+        "is_financial": true
+      },
+      {
+        "code": "2882",
+        "name": "國泰金",
+        "quantity": 659470000,
+        "zhang": 659470,
+        "weight": 11.16,
+        "is_financial": true
+      },
+      {
+        "code": "2881",
+        "name": "富邦金",
+        "quantity": 409170000,
+        "zhang": 409170,
+        "weight": 8.26,
+        "is_financial": true
+      },
+      {
+        "code": "2357",
+        "name": "華碩",
+        "quantity": 38810000,
+        "zhang": 38810,
+        "weight": 5.62,
+        "is_financial": false
+      },
+      {
+        "code": "2603",
+        "name": "長榮",
+        "quantity": 117153000,
+        "zhang": 117153,
+        "weight": 5.45,
+        "is_financial": false
+      },
+      {
+        "code": "2887",
+        "name": "台新新光金",
+        "quantity": 1026630000,
+        "zhang": 1026630,
+        "weight": 5.19,
+        "is_financial": true
+      },
+      {
+        "code": "3034",
+        "name": "聯詠",
+        "quantity": 41195000,
+        "zhang": 41195,
+        "weight": 4.25,
+        "is_financial": false
+      },
+      {
+        "code": "3036",
+        "name": "文曄",
+        "quantity": 50460000,
+        "zhang": 50460,
+        "weight": 3.1,
+        "is_financial": false
+      },
+      {
+        "code": "2609",
+        "name": "陽明",
+        "quantity": 237710000,
+        "zhang": 237710,
+        "weight": 2.67,
+        "is_financial": false
+      },
+      {
+        "code": "2404",
+        "name": "漢唐",
+        "quantity": 9836000,
+        "zhang": 9836,
+        "weight": 2.41,
+        "is_financial": false
+      },
+      {
+        "code": "5347",
+        "name": "世界",
+        "quantity": 66872441,
+        "zhang": 66872,
+        "weight": 2.3,
+        "is_financial": false
+      },
+      {
+        "code": "6239",
+        "name": "力成",
+        "quantity": 37904000,
+        "zhang": 37904,
+        "weight": 2.28,
+        "is_financial": false
+      },
+      {
+        "code": "2618",
+        "name": "長榮航",
+        "quantity": 297204000,
+        "zhang": 297204,
+        "weight": 2.24,
+        "is_financial": false
+      },
+      {
+        "code": "2451",
+        "name": "創見",
+        "quantity": 21319000,
+        "zhang": 21319,
+        "weight": 1.43,
+        "is_financial": false
+      },
+      {
+        "code": "2474",
+        "name": "可成",
+        "quantity": 30870000,
+        "zhang": 30870,
+        "weight": 1.23,
+        "is_financial": false
+      },
+      {
+        "code": "3702",
+        "name": "大聯大",
+        "quantity": 44160000,
+        "zhang": 44160,
+        "weight": 1.11,
+        "is_financial": false
+      },
+      {
+        "code": "6121",
+        "name": "新普",
+        "quantity": 13474000,
+        "zhang": 13474,
+        "weight": 1.09,
+        "is_financial": false
+      },
+      {
+        "code": "5522",
+        "name": "遠雄",
+        "quantity": 72239000,
+        "zhang": 72239,
+        "weight": 1.07,
+        "is_financial": false
+      },
+      {
+        "code": "2385",
+        "name": "群光",
+        "quantity": 36160000,
+        "zhang": 36160,
+        "weight": 1.01,
+        "is_financial": false
+      },
+      {
+        "code": "6176",
+        "name": "瑞儀",
+        "quantity": 43111000,
+        "zhang": 43111,
+        "weight": 0.98,
+        "is_financial": false
+      },
+      {
+        "code": "2504",
+        "name": "國產",
+        "quantity": 117699000,
+        "zhang": 117699,
+        "weight": 0.87,
+        "is_financial": false
+      },
+      {
+        "code": "2637",
+        "name": "慧洋-KY",
+        "quantity": 56940000,
+        "zhang": 56940,
+        "weight": 0.86,
+        "is_financial": false
+      },
+      {
+        "code": "2027",
+        "name": "大成鋼",
+        "quantity": 71700000,
+        "zhang": 71700,
+        "weight": 0.64,
+        "is_financial": false
+      },
+      {
+        "code": "1477",
+        "name": "聚陽",
+        "quantity": 13410000,
+        "zhang": 13410,
+        "weight": 0.62,
+        "is_financial": false
+      },
+      {
+        "code": "3211",
+        "name": "順達",
+        "quantity": 7560000,
+        "zhang": 7560,
+        "weight": 0.62,
+        "is_financial": false
+      },
+      {
+        "code": "2458",
+        "name": "義隆",
+        "quantity": 16080000,
+        "zhang": 16080,
+        "weight": 0.55,
+        "is_financial": false
+      },
+      {
+        "code": "8112",
+        "name": "至上",
+        "quantity": 29539000,
+        "zhang": 29539,
+        "weight": 0.54,
+        "is_financial": false
+      },
+      {
+        "code": "2606",
+        "name": "裕民",
+        "quantity": 38643000,
+        "zhang": 38643,
+        "weight": 0.54,
+        "is_financial": false
+      },
+      {
+        "code": "1215",
+        "name": "卜蜂",
+        "quantity": 14460000,
+        "zhang": 14460,
+        "weight": 0.44,
+        "is_financial": false
+      },
+      {
+        "code": "6670",
+        "name": "復盛應用",
+        "quantity": 7720000,
+        "zhang": 7720,
+        "weight": 0.43,
+        "is_financial": false
+      },
+      {
+        "code": "6412",
+        "name": "群電",
+        "quantity": 19510000,
+        "zhang": 19510,
+        "weight": 0.42,
+        "is_financial": false
+      },
+      {
+        "code": "4915",
+        "name": "致伸",
+        "quantity": 26366000,
+        "zhang": 26366,
+        "weight": 0.4,
+        "is_financial": false
+      },
+      {
+        "code": "8070",
+        "name": "長華*",
+        "quantity": 40700000,
+        "zhang": 40700,
+        "weight": 0.39,
+        "is_financial": false
+      },
+      {
+        "code": "4763",
+        "name": "材料*-KY",
+        "quantity": 41500000,
+        "zhang": 41500,
+        "weight": 0.38,
+        "is_financial": false
+      },
+      {
+        "code": "2211",
+        "name": "長榮鋼",
+        "quantity": 19660000,
+        "zhang": 19660,
+        "weight": 0.38,
+        "is_financial": false
+      },
+      {
+        "code": "6757",
+        "name": "台灣虎航",
+        "quantity": 26920000,
+        "zhang": 26920,
+        "weight": 0.31,
+        "is_financial": false
+      },
+      {
+        "code": "6005",
+        "name": "群益證",
+        "quantity": 28336000,
+        "zhang": 28336,
+        "weight": 0.19,
+        "is_financial": false
+      },
+      {
+        "code": "8422",
+        "name": "可寧衛*",
+        "quantity": 31040000,
+        "zhang": 31040,
+        "weight": 0.18,
+        "is_financial": false
+      },
+      {
+        "code": "6278",
+        "name": "台表科",
+        "quantity": 2932000,
+        "zhang": 2932,
+        "weight": 0.15,
+        "is_financial": false
+      }
+    ]
+  }
+}
