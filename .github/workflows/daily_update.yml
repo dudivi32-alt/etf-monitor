@@ -2,7 +2,7 @@ name: 每日 ETF 資料更新
 
 on:
   schedule:
-    - cron: '0 12 * * 1-5'   # 台灣時間 晚上 20:00（UTC 12:00），週一到週五
+    - cron: '0 9 * * 1-5'    # 台灣時間 下午 17:00（UTC 09:00），週一到週五
   workflow_dispatch:           # 手動觸發
 
 jobs:
